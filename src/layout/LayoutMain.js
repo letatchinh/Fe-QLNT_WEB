@@ -8,7 +8,8 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PATH_APP } from "../routes/path";
-  
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
   const { Header, Content, Footer, Sider } = Layout;
   function getItem(label, key, icon, children) {
     return {
@@ -23,6 +24,7 @@ import { PATH_APP } from "../routes/path";
     getItem("Danh sách phòng trọ", PATH_APP.rooms.root, <DesktopOutlined />),
     getItem("Quản lí phòng trọ", "sub1", <UserOutlined />, [
       getItem("Thêm phòng trọ", PATH_APP.rooms.create),
+      getItem("Tạo brem phòng", PATH_APP.brem.create),
       getItem("Tính tiền phòng", PATH_APP.rooms.charge),
       getItem("Sửa đổi phòng", PATH_APP.rooms.update),
     ]),
@@ -42,6 +44,7 @@ export default function LayoutMain({children,title}) {
       minHeight: "100vh",
     }}
   >
+   <ToastContainer />
     <Sider
       collapsible
       collapsed={collapsed}

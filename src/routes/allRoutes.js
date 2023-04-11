@@ -6,6 +6,7 @@ import Rooms from '../pages/Rooms/index';
 import CreateRoom from '../pages/CreateRoom/index';
 import UpdateRoom from '../pages/UpdateRoom/index';
 import Charge from '../pages/Charge/index';
+import CreateBrem from '../pages/CreateBrem/index';
 
 const adminRoutes = [
   { path: '/', element: <Dashboard/>, title:"Thống kê" },
@@ -28,6 +29,11 @@ const adminRoutes = [
     path: PATH_APP.rooms.charge,
     element: <Charge/>,
     title:"Tính tiền phòng"
+  },
+  {
+    path: PATH_APP.brem.create,
+    element: <CreateBrem/>,
+    title:"Tạo brem phòng"
   },
 ]
 export { adminRoutes};

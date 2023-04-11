@@ -17,6 +17,9 @@ export const PATH_APP = {
       charge:path(ROOTS.app,'/rooms/charge'),
       update:path(ROOTS.app,'/rooms/update'),
     },
+    brem: {
+      create:path(ROOTS.app,'/brem/create'),
+    },
   
   
   };
