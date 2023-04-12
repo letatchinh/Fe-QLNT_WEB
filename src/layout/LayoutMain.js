@@ -1,6 +1,7 @@
 import {
     DesktopOutlined,
     PieChartOutlined,
+    UserAddOutlined,
     UserOutlined,
   } from "@ant-design/icons";
   import { Breadcrumb, Layout, Menu, theme } from "antd";
@@ -22,6 +23,7 @@ import 'react-toastify/dist/ReactToastify.css';
   const items = [
     getItem("Thống kê", PATH_APP.main.dashboard, <PieChartOutlined />),
     getItem("Danh sách phòng trọ", PATH_APP.rooms.root, <DesktopOutlined />),
+    getItem("Danh sách người dùng", PATH_APP.user.root, <UserAddOutlined />),
     getItem("Quản lí phòng trọ", "sub1", <UserOutlined />, [
       getItem("Thêm phòng trọ", PATH_APP.rooms.create),
       getItem("Tạo brem phòng", PATH_APP.brem.create),

@@ -2,7 +2,7 @@ import { DollarCircleOutlined, EditOutlined, EllipsisOutlined, SettingOutlined }
 import { Avatar, Card } from 'antd';
 import { room } from '../../assets/image';
 const { Meta } = Card;
-const CardRoom = () => (
+const CardRoom = ({item}) => (
   <Card
   style={{marginTop:'10px'}}
     cover={
@@ -19,7 +19,7 @@ const CardRoom = () => (
   >
     <Meta
       avatar={<Avatar src="https://joesch.moe/api/v1/random" />}
-      title="Card title"
+      title={`Phòng số ${item.roomNumber}`}
       description="This is the description"
     />
   </Card>

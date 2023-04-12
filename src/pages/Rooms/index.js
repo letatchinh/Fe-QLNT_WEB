@@ -1,15 +1,23 @@
 import { Col, Row } from 'antd'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import api from '../../api'
 import CardRoom from '../../components/Room/CardRoom'
 
-export default function index() {
+export default function Index() {
+const [rooms,setRooms] = useState([])
+const [loading,setLoading] = useState(false)
+useEffect(() => {
+  const fetch = async () => {
+    setLoading(true)
+    const res = await api.room.getAll()
+    setRooms(res)
+    setLoading(false)
+  }
+  fetch()
+},[])
   return (
    <Row wrap='wrap' gutter={16} justify='space-evenly'>
-     <Col span={6}><CardRoom /></Col>
-     <Col span={6}><CardRoom /></Col>
-     <Col span={6}><CardRoom /></Col>
-     <Col span={6}><CardRoom /></Col>
-     <Col span={6}><CardRoom /></Col>
+    {loading ? <div>Loading...</div> : rooms?.map((e,i) => <Col key={i} span={6}><CardRoom item={e}/></Col>) }
    </Row>
   )
 }

@@ -7,6 +7,7 @@ import CreateRoom from '../pages/CreateRoom/index';
 import UpdateRoom from '../pages/UpdateRoom/index';
 import Charge from '../pages/Charge/index';
 import CreateBrem from '../pages/CreateBrem/index';
+import User from '../pages/User/index';
 
 const adminRoutes = [
   { path: '/', element: <Dashboard/>, title:"Thống kê" },
@@ -34,6 +35,11 @@ const adminRoutes = [
     path: PATH_APP.brem.create,
     element: <CreateBrem/>,
     title:"Tạo brem phòng"
+  },
+  {
+    path: PATH_APP.user.root,
+    element: <User/>,
+    title:"Quản lí người dùng"
   },
 ]
 export { adminRoutes};

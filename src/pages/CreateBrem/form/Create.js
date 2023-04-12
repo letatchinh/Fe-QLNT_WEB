@@ -15,6 +15,7 @@ export default function Create() {
     useEffect(() => {
         const fetch = async () => {
             const {lastBrem} = await api.brem.getLastNumber()
+            console.log(lastBrem,"lastBrem");
             setBremNumber(get(lastBrem,'bremNumber'))
         }
         fetch()

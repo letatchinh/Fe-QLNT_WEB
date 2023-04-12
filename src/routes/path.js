@@ -20,6 +20,9 @@ export const PATH_APP = {
     brem: {
       create:path(ROOTS.app,'/brem/create'),
     },
+    user: {
+      root:path(ROOTS.app,'/user'),
+    },
   
   
   };
