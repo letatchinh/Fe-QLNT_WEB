@@ -18,7 +18,7 @@ export default function Parameter({brem}) {
   return (
     <>
          <Divider>Chỉ số brem</Divider>
-        <Row justify={"space-between"}>
+        <Row style={{margin : '10px 0'}} justify={"space-between"}>
           <Col span={span4}>
             <Text>
               Giá điện <ThunderboltOutlined />: {electricityPrice}

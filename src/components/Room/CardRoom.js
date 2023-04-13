@@ -2,7 +2,7 @@ import { DollarCircleOutlined, EditOutlined, EllipsisOutlined, SettingOutlined }
 import { Avatar, Card } from 'antd';
 import { room } from '../../assets/image';
 const { Meta } = Card;
-const CardRoom = ({item}) => (
+const CardRoom = ({item,handleOpen}) => (
   <Card
   style={{marginTop:'10px'}}
     cover={
@@ -12,7 +12,7 @@ const CardRoom = ({item}) => (
       />
     }
     actions={[
-        <DollarCircleOutlined key='charge'/>,
+        <DollarCircleOutlined onClick={handleOpen} key='charge'/>,
       <EditOutlined key="edit" />,
       <EllipsisOutlined key="ellipsis" />,
     ]}

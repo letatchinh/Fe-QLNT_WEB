@@ -1,5 +1,5 @@
 import {
-  Button, Divider,
+  Button, Col, Divider,
   Form, InputNumber,
   Row,
   Select,
@@ -8,6 +8,8 @@ import {
 } from "antd";
 import { useForm } from "antd/es/form/Form";
 import TextArea from "antd/es/input/TextArea";
+import { get } from "lodash";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import api from "../../api";
@@ -61,13 +63,14 @@ export default function Index() {
     fetch();
   }, []);
   const onFinish = async (values) => {
-    const submitData = {...values,people : listUser}
+    const submitData = {...values,date : moment().subtract(1,'M').format("YYYY-MM-DD"),people : listUser.map(e => ({userId : e}))}
     const res = await api.room.create(submitData)
-    if(res){
-      if(res){
+      if(get(res,'status')){
         toast.success("Tạo phòng thành công")
         form.resetFields()
     }
+    else{
+      toast.error(get(res,'message',''))
     }
   };
   return (
@@ -106,7 +109,20 @@ export default function Index() {
           <Select onChange={onChangeBrem} options={opTionsbrem} />
         </Form.Item>
        {selectBrem && <Parameter brem={selectBrem}/>}
+       <Row>
+          <Col span={10}>
+            <Form.Item  label='Số điện hiện tại' name='electricity'>
+              <InputNumber style={{width : '150px'}}/>
+            </Form.Item>
+          </Col>
+          <Col span={14}>
+            <Form.Item label='Số nước hiện tại' name='water'>
+              <InputNumber style={{width : '150px'}}/>
+            </Form.Item>
+          </Col>
+        </Row>
         <Row>
+        
           <Button
             style={{ margin: "0 auto", width: "200px" }}
             type="primary"
