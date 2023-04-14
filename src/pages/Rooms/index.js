@@ -6,6 +6,7 @@ import FormCharge from './FormCharge'
 
 export default function Index() {
 const [rooms,setRooms] = useState([])
+console.log(rooms,"rooms");
 const [selectRoom,setSelectRoom] = useState(null)
 const [loading,setLoading] = useState(false)
 const [visible,setVisible] = useState(false)

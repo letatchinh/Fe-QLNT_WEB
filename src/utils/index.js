@@ -14,3 +14,4 @@ export const getDateMonthYearNow = () => {
     const year = moment(date).format("YYYY")
     return [date, month, year]
 }
+export const formatNumberThreeComma = (num) => num?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

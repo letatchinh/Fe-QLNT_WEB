@@ -1,6 +1,7 @@
-import { DollarCircleOutlined, EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
-import { Avatar, Card } from 'antd';
+import { CheckCircleOutlined, CloseCircleOutlined, DollarCircleOutlined, EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
+import { Avatar, Card, Tag } from 'antd';
 import { room } from '../../assets/image';
+import './index.css'
 const { Meta } = Card;
 const CardRoom = ({item,handleOpen}) => (
   <Card
@@ -20,7 +21,11 @@ const CardRoom = ({item,handleOpen}) => (
     <Meta
       avatar={<Avatar src="https://joesch.moe/api/v1/random" />}
       title={`Phòng số ${item.roomNumber}`}
-      description="This is the description"
+      description={item.bill ?  <Tag icon={<CheckCircleOutlined />} color="success">
+        Đã thanh toán
+      </Tag> : <Tag icon={<CloseCircleOutlined />} color="error">
+        Chưa thanh toán
+      </Tag>}
     />
   </Card>
 );
