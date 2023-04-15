@@ -3,7 +3,7 @@ import { Avatar, Card, Tag } from 'antd';
 import { room } from '../../assets/image';
 import './index.css'
 const { Meta } = Card;
-const CardRoom = ({item,handleOpen}) => (
+const CardRoom = ({item,handleOpen,handleUpdate}) => (
   <Card
   style={{marginTop:'10px'}}
     cover={
@@ -14,7 +14,7 @@ const CardRoom = ({item,handleOpen}) => (
     }
     actions={[
         <DollarCircleOutlined onClick={handleOpen} key='charge'/>,
-      <EditOutlined key="edit" />,
+      <EditOutlined key="edit" onClick={handleUpdate}/>,
       <EllipsisOutlined key="ellipsis" />,
     ]}
   >

@@ -1,12 +1,15 @@
 import { Col, Divider, Modal, Row } from 'antd'
 import React, { useEffect, useState } from 'react'
+import { useNavigate, useRoutes } from "react-router-dom";
 import api from '../../api'
 import CardRoom from '../../components/Room/CardRoom'
+import { PATH_APP } from '../../routes/path'
 import FormCharge from './FormCharge'
 
 export default function Index() {
 const [rooms,setRooms] = useState([])
 console.log(rooms,"rooms");
+const navigate = useNavigate();
 const [selectRoom,setSelectRoom] = useState(null)
 const [loading,setLoading] = useState(false)
 const [visible,setVisible] = useState(false)
@@ -17,6 +20,9 @@ const onCancel = () => {
 const handleOpen = (room) => {
   setSelectRoom(room)
   setVisible(true)
+}
+const handleUpdate = (id) => {
+  navigate(`${PATH_APP.rooms.update}/${id}`)
 }
 const setNewRoom = (newRoom) => {
   const newRooms = rooms.map((room) => {
@@ -38,7 +44,7 @@ useEffect(() => {
 },[])
   return (
    <Row wrap='wrap' gutter={16} justify='space-evenly'>
-    {loading ? <div>Loading...</div> : rooms?.map((e,i) => <Col key={i} span={6}><CardRoom handleOpen={() => handleOpen(e)} item={e}/></Col>) }
+    {loading ? <div>Loading...</div> : rooms?.map((e,i) => <Col key={i} span={6}><CardRoom handleUpdate={() => handleUpdate(e._id)} handleOpen={() => handleOpen(e)} item={e}/></Col>) }
     <Modal width={1000} open={visible} onCancel={onCancel} footer={null} >
       {selectRoom ? <FormCharge setNewRoom={setNewRoom} onCancel={onCancel} room={selectRoom}/> : null}
     </Modal>

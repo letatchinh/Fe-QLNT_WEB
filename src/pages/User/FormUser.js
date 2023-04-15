@@ -39,6 +39,18 @@ export default function FormUser({onCancel}) {
         >
             <Input />
         </Form.Item>
+        <Form.Item
+        label='Số điện thoại'
+        name='phone'
+        >
+            <Input />
+        </Form.Item>
+        <Form.Item
+        label='Email'
+        name='email'
+        >
+            <Input />
+        </Form.Item>
        <GroupButtonForm onCancel={onCancel}/>
         </Form>
     </div>

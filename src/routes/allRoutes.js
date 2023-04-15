@@ -22,7 +22,7 @@ const adminRoutes = [
     title:"Tạo phòng"
   },
   {
-    path: PATH_APP.rooms.update,
+    path:`${PATH_APP.rooms.update}/:id`,
     element: <UpdateRoom/>,
     title:"Cập nhật phòng"
   },

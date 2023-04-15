@@ -39,6 +39,16 @@ export default function Index() {
             key : 'countryside',
             dataIndex : 'countryside',
         },
+        {
+            title:'Số điện thoại',
+            key : 'phone',
+            dataIndex : 'phone',
+        },
+        {
+            title:'Email',
+            key : 'email',
+            dataIndex : 'email',
+        },
     ]
   return (
     <div>
