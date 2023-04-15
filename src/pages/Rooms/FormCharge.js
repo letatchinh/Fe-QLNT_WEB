@@ -30,16 +30,18 @@ const descriptionItemProps = {
   },
 };
 const span = 12;
-export default function FormCharge({ room, onCancel }) {
+export default function FormCharge({ room, onCancel,setNewRoom }) {
   const { brems, _id } = room;
   const { electricityPrice, rent, trash, waterPrice, wifi } = brems;
   const [meters, setMeter] = useState({ meterNow: null, meterPre: null });
+  console.log(meters,"meters");
   const [form] = Form.useForm();
   useEffect(() => {
     const fetch = async () => {
       const [date, month, year] = getDateMonthYearNow();
       const res = await api.meter.getPreAndMonthNow({ idRoom: _id, date });
       if (res) {
+        console.log(res,"res");
         const { meterNow } = res;
         setMeter(res);
         form.setFieldsValue({
@@ -49,7 +51,7 @@ export default function FormCharge({ room, onCancel }) {
       }
     };
     fetch();
-  }, [room]);
+  }, [room,setNewRoom]);
   const electricityUse =
     get(meters, "meterNow.electricity", 0) -
     get(meters, "meterPre.electricity", 0);
@@ -73,9 +75,12 @@ export default function FormCharge({ room, onCancel }) {
       rent
     };
     const res = await api.bill.create(submitData)
+    console.log(res,"res");
     if(res){
       if(res.status){
         toast.success("Thanh toán thành công")
+        const newRoom = {...room,bill : res.createBill}
+        setNewRoom(newRoom)
         onCancel()
       }
     }
@@ -93,6 +98,7 @@ export default function FormCharge({ room, onCancel }) {
         water,
       };
       const res = await api.meter.createOrUpdate(submitData);
+      console.log(res,"res");
       if (res) {
         if (get(res, "status", "") === "create") {
           toast.success("Thêm thành công số điện nước");
@@ -100,6 +106,7 @@ export default function FormCharge({ room, onCancel }) {
         if (get(res, "status", "") === "update") {
           toast.success("Cập nhật thành công số điện nước");
         }
+       setMeter({...meters,meterNow : res.data})
         form.resetFields();
         onCancel();
       }

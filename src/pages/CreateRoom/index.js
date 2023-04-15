@@ -6,7 +6,6 @@ import {
   Tag,
   Typography
 } from "antd";
-import { useForm } from "antd/es/form/Form";
 import TextArea from "antd/es/input/TextArea";
 import { get } from "lodash";
 import moment from "moment";
@@ -15,7 +14,7 @@ import { toast } from "react-toastify";
 import api from "../../api";
 import Parameter from "../../components/Brem/Parameter";
 export default function Index() {
-  const [form] = useForm()
+  const [form] = Form.useForm()
   const [brem, setBrem] = useState([]);
   const [opTionsbrem, setOpTionsBrem] = useState([]);
   const [user, setUser] = useState([]);
@@ -77,6 +76,7 @@ export default function Index() {
     <div>
       <Divider>Tạo phòng</Divider>
       <Form
+      form={form}
         labelAlign="left"
         wrapperCol={{ md: 12, lg: 12, sm: 24, xs: 24 }}
         labelCol={{ md: 10, lg: 10 }}

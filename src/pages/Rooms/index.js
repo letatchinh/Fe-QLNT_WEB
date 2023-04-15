@@ -18,6 +18,15 @@ const handleOpen = (room) => {
   setSelectRoom(room)
   setVisible(true)
 }
+const setNewRoom = (newRoom) => {
+  const newRooms = rooms.map((room) => {
+    if(newRoom._id === room._id){
+      return newRoom
+    }
+    return room
+  })
+  setRooms(newRooms)
+}
 useEffect(() => {
   const fetch = async () => {
     setLoading(true)
@@ -31,7 +40,7 @@ useEffect(() => {
    <Row wrap='wrap' gutter={16} justify='space-evenly'>
     {loading ? <div>Loading...</div> : rooms?.map((e,i) => <Col key={i} span={6}><CardRoom handleOpen={() => handleOpen(e)} item={e}/></Col>) }
     <Modal width={1000} open={visible} onCancel={onCancel} footer={null} >
-      {selectRoom ? <FormCharge onCancel={onCancel} room={selectRoom}/> : null}
+      {selectRoom ? <FormCharge setNewRoom={setNewRoom} onCancel={onCancel} room={selectRoom}/> : null}
     </Modal>
    </Row>
   )
