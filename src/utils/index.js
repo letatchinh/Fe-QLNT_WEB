@@ -1,5 +1,5 @@
 import moment from "moment";
-
+export const formatDate = "YYYY-MM-DD"
 export const getDateNow = () => moment().format('YYYY-MM-DD')
 export const getPreMonth = () => moment().subtract(1,'M').format('YYYY-MM-DD')
 export const getDatePreMonth = () => {
@@ -15,3 +15,9 @@ export const getDateMonthYearNow = () => {
     return [date, month, year]
 }
 export const formatNumberThreeComma = (num) => num?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+export const getMonthNow = () => {
+    const startDate = moment().startOf('M').format(formatDate)
+    const endDate = moment().endOf('M').format(formatDate)
+    return {startDate,endDate}
+}

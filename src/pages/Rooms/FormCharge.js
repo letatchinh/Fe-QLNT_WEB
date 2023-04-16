@@ -34,7 +34,6 @@ export default function FormCharge({ room, onCancel,setNewRoom }) {
   const { brems, _id } = room;
   const { electricityPrice, rent, trash, waterPrice, wifi } = brems;
   const [meters, setMeter] = useState({ meterNow: null, meterPre: null });
-  console.log(meters,"meters");
   const [form] = Form.useForm();
   useEffect(() => {
     const fetch = async () => {

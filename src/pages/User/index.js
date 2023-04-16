@@ -1,18 +1,41 @@
-import { Button, Col, Modal, Row, Table } from 'antd'
+import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons'
+import { Button, Col, Modal, Row, Table, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import api from '../../api'
 import SkeletonTable from '../../components/comom/SkeletonTable'
 import FormUser from './FormUser'
 
 export default function Index() {
     const [visible,setVisible] = useState(false)
+    const [selectIdDelete,setSelectIdDelete] = useState(null)
+    const [isOpenModalDelete,setIsOpenModalDelete] = useState(false)
+    const [select,setSelect] = useState(null)
     const [user,setUser] = useState([])
     const [loading,setLoading] = useState(false)
     const onCancel = () => {
         setVisible(false)
     }
-    const handleOpen = () => {
+    const handleOpen = (item) => {
+        if(item) setSelect(item)
         setVisible(true)
+    }
+    const onCancelModalDelete = () => {
+        setIsOpenModalDelete(false)
+        setSelectIdDelete(null)
+    }
+    const handleOpenModalDelete = (id) => {
+        setIsOpenModalDelete(true)
+        setSelectIdDelete(id)
+    }
+    const handleDelete = async() => {
+        const res = await api.user.delete(selectIdDelete)
+        console.log(res,"res");
+        if(res.status){
+            setUser(user.filter(e => e._id !== selectIdDelete))
+            onCancelModalDelete()
+            toast.success("Xoá người dùng thành công")
+        }
     }
     useEffect(() => {
         const fetch = async () => {
@@ -49,6 +72,15 @@ export default function Index() {
             key : 'email',
             dataIndex : 'email',
         },
+        {
+            title:'Thao tác',
+            key : 'action',
+            dataIndex : 'action',
+            render:(item,record,index) => <div>
+                <Button onClick={() => handleOpen(record)}><EditTwoTone /></Button>
+                <Button disabled onClick={() => handleOpenModalDelete(record._id)}><DeleteTwoTone /></Button>
+            </div>
+        },
     ]
   return (
     <div>
@@ -58,7 +90,16 @@ export default function Index() {
         </Row>
         {loading ? <SkeletonTable rowCount={5} columns={columns}/> :<Table dataSource={user} columns={columns}/>}
         <Modal open={visible} footer={null} onCancel={onCancel} >
-        <FormUser onCancel={onCancel}/>
+        <FormUser select={select} onCancel={onCancel}/>
+        </Modal>
+        <Modal width={300} style={{textAlign : 'center'}} open={isOpenModalDelete} footer={null} onCancel={onCancelModalDelete}>
+        <Typography.Title level={4}>
+            Xác nhận xoá
+        </Typography.Title>
+        <Row justify='space-between'>
+            <Button onClick={onCancelModalDelete}>Huỷ</Button>
+            <Button onClick={handleDelete} danger>Xoá</Button>
+        </Row>
         </Modal>
     </div>
   )
