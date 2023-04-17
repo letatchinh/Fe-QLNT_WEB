@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import api from '../../api'
 import SkeletonTable from '../../components/comom/SkeletonTable'
 import FormUser from './FormUser'
-
+import {get} from 'lodash'
 export default function Index() {
     const [visible,setVisible] = useState(false)
     const [selectIdDelete,setSelectIdDelete] = useState(null)
@@ -31,11 +31,14 @@ export default function Index() {
     }
     const handleDelete = async() => {
         const res = await api.user.delete(selectIdDelete)
-        console.log(res,"res");
         if(res.status){
             setUser(user.filter(e => e._id !== selectIdDelete))
             onCancelModalDelete()
             toast.success("Xoá người dùng thành công")
+        }
+        else{
+            onCancelModalDelete()
+            toast.error(`Không thể xoá người dùng do người dùng đang còn ở trong phòng ${get(res,'data.roomNumber','')}`)
         }
     }
     useEffect(() => {
@@ -79,7 +82,7 @@ export default function Index() {
             dataIndex : 'action',
             render:(item,record,index) => <div>
                 <Button onClick={() => handleOpen(record)}><EditTwoTone /></Button>
-                <Button disabled onClick={() => handleOpenModalDelete(record._id)}><DeleteTwoTone /></Button>
+                <Button onClick={() => handleOpenModalDelete(record._id)}><DeleteTwoTone /></Button>
             </div>
         },
     ]
