@@ -28,7 +28,7 @@ import 'react-toastify/dist/ReactToastify.css';
       getItem("Thêm phòng trọ", PATH_APP.rooms.create),
       getItem("Tạo brem phòng", PATH_APP.brem.create),
       // getItem("Tính tiền phòng", PATH_APP.rooms.charge),
-      getItem("Sửa đổi phòng", PATH_APP.rooms.update),
+      // getItem("Sửa đổi phòng", PATH_APP.rooms.update),
     ]),
   ];
 export default function LayoutMain({children,title}) {

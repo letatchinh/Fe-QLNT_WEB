@@ -1,6 +1,5 @@
 import { BgColorsOutlined, DeleteOutlined, DollarCircleOutlined, ThunderboltOutlined, WifiOutlined } from '@ant-design/icons'
 import { Button, Col, Divider, Form, Input, InputNumber, Row, Typography } from 'antd'
-import { useForm } from 'antd/es/form/Form'
 import { get } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -10,7 +9,7 @@ const span = 12
 const span4 = 4
 const {Text} = Typography
 export default function Create() {
-    const [form] = useForm()
+    const [form] = Form.useForm()
     const [bremNumber,setBremNumber] = useState(0)
     useEffect(() => {
         const fetch = async () => {
@@ -30,7 +29,7 @@ export default function Create() {
         }
     }
   return (
-    <Form className='form-center'  onFinish={onFinish}>
+    <Form form={form} className='form-center'  onFinish={onFinish}>
         <Row gutter={gutter}>
             <Col span={span}>
             <Form.Item label='Tên brem' name="name" >

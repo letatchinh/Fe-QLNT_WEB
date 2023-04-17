@@ -1,38 +1,44 @@
 import { Button, Divider, Form, Input, InputNumber, Row } from 'antd'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 import api from '../../api';
 import GroupButtonForm from '../../components/GroupButton/Index';
 
-export default function FormUser({onCancel,select}) {
+export default function FormUser({onCancel,selectUser}) {
+    console.log(selectUser,'selectUser');
     const [form] = Form.useForm()
+    const [loading,setLoading] = useState(false)
     const onFinish = async(values) => {
-        if(select){
-            const res = await api.user.update({...values,_id :select._id })
+        if(!!selectUser){
+            setLoading(true)
+            const res = await api.user.update({...values,_id :selectUser._id })
             if(res){
                 toast.success("Cập nhật người dùng thành công")
                 onCancel()
             }
+            setLoading(false)
         }
         else{
+            setLoading(true)
             const res = await api.user.create(values)
             if(res){
                 toast.success("Tạo người dùng thành công")
                 onCancel()
             }
+            setLoading(false)
         }
      
     }
     useEffect(() => {
         form.resetFields()
-        if(select){
-            const {name,CMND,countryside,phone,email} = select
+        if(selectUser){
+            const {name,CMND,countryside,phone,email} = selectUser
             form.setFieldsValue({name,CMND,countryside,phone,email})
         }
-    },[select])
+    },[selectUser])
   return (
     <div>
-        <Divider>{select ? "Cập nhật người dùng" :"Tạo người dùng"}</Divider>
+        <Divider>{selectUser ? "Cập nhật người dùng" :"Tạo người dùng"}</Divider>
         <Form
         form={form}
         labelAlign='left'
@@ -69,7 +75,7 @@ export default function FormUser({onCancel,select}) {
         >
             <Input />
         </Form.Item>
-       <GroupButtonForm text={select ? "Cập nhật" : "Tạo mới"} onCancel={onCancel}/>
+       <GroupButtonForm loading={loading} text={!!selectUser ? "Cập nhật" : "Tạo mới"} onCancel={onCancel}/>
         </Form>
     </div>
   )

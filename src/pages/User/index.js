@@ -17,6 +17,7 @@ export default function Index() {
         setVisible(false)
     }
     const handleOpen = (item) => {
+        console.log(item,"item");
         if(item) setSelect(item)
         setVisible(true)
     }
@@ -86,11 +87,11 @@ export default function Index() {
     <div>
         <Row style={{margin : '10px 0'}} justify='space-between'>
             <Col></Col>
-            <Col><Button onClick={handleOpen}>Thêm người dùng</Button></Col>
+            <Col><Button onClick={() => handleOpen()}>Thêm người dùng</Button></Col>
         </Row>
         {loading ? <SkeletonTable rowCount={5} columns={columns}/> :<Table dataSource={user} columns={columns}/>}
         <Modal open={visible} footer={null} onCancel={onCancel} >
-        <FormUser select={select} onCancel={onCancel}/>
+        <FormUser selectUser={select} onCancel={onCancel}/>
         </Modal>
         <Modal width={300} style={{textAlign : 'center'}} open={isOpenModalDelete} footer={null} onCancel={onCancelModalDelete}>
         <Typography.Title level={4}>

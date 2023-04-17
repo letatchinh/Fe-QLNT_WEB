@@ -48,12 +48,12 @@ useEffect(() => {
   fetch()
 },[])
 const handleSwitch = (value) => {
-  setIsSwitch(value)
-  if(value){
-    setRoomShow(rooms.filter(e => !e.bill && (e.roomNumber.toString() == value)))
+  setIsSwitch(!value)
+  if(!value){ // all
+    setRoomShow(rooms.filter(e => !e.bill && (e.roomNumber.toString().includes(valueSearcher))))
   }
   else {
-    setRoomShow(rooms.filter(e => e.roomNumber.toString().includes(value)))
+    setRoomShow(rooms.filter(e => e.roomNumber.toString().includes(valueSearcher)))
   }
 }
 const onSearch = (value) => {
@@ -61,7 +61,7 @@ const onSearch = (value) => {
     setRoomShow(rooms.filter(e => !e.bill && (e.roomNumber.toString().includes(value)) ))
   }
   else{
-    setRoomShow(rooms.filter(e => (e.roomNumber.toString().includes(value)) ))
+    setRoomShow(rooms.filter(e => e.roomNumber.toString().includes(value) ))
   }
 }
 
