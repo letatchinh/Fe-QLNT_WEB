@@ -11,11 +11,17 @@ import 'react-toastify/dist/ReactToastify.css';
 import { KEY_STORED } from "../constant/defaultValue";
 import './index.css'
 export default function HeaderMain() {
+  const navigate = useNavigate()
     const [account,setAccount] = useState(null)
-    const navigate = useNavigate()
     useEffect(() => {
         const acc = localStorage.getItem(KEY_STORED)
-        setAccount(JSON.parse(acc))
+        if(acc){
+          setAccount(JSON.parse(acc))
+        }
+        else{
+          navigate("/login")
+        }
+       
       },[localStorage.getItem(KEY_STORED)])
 
     const handleLogout = () => {

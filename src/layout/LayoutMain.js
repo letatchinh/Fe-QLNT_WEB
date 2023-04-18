@@ -1,4 +1,5 @@
 import {
+  BankOutlined,
     DesktopOutlined,
     PieChartOutlined,
     TeamOutlined,
@@ -26,6 +27,7 @@ import HeaderMain from "./HeaderMain";
   }
   const itemsNavbar = [
     getItem("Thống kê", PATH_APP.main.dashboard, <PieChartOutlined />),
+    getItem("Danh sách Khu nhà", PATH_APP.groupRoom.root, <BankOutlined />),
     getItem("Danh sách phòng trọ", PATH_APP.rooms.root, <DesktopOutlined />),
     getItem("Quản lý tài khoản", PATH_APP.account.root, <TeamOutlined />),
     getItem("Quản lí sinh viên", "sub2", <UserAddOutlined />,[

@@ -10,6 +10,7 @@ import CreateBrem from '../pages/CreateBrem/index';
 import User from '../pages/User/index';
 import Login from '../pages/Login/Index';
 import Account from '../pages/Account/Index';
+import GroupRoom from '../pages/GroupRoom/Index';
 import Hobby from '../pages/User/Hobby';
 
 const adminRoutes = [
@@ -54,6 +55,11 @@ const adminRoutes = [
     path: PATH_APP.account.root,
     element: <Account/>,
     title:"Quản lí tài khoản"
+  },
+  {
+    path: PATH_APP.groupRoom.root,
+    element: <GroupRoom/>,
+    title:"Quản lí Khu nhà"
   },
 ]
 export { adminRoutes};

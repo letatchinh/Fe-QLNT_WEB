@@ -27,6 +27,9 @@ export const PATH_APP = {
     },
     account:{
       root:path(ROOTS.app,'/account'),
+    },
+    groupRoom:{
+      root:path(ROOTS.app,'/groupRoom'),
     }
   
   

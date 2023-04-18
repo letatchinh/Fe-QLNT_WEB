@@ -4,42 +4,58 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import api from '../../api'
 import SkeletonTable from '../../components/comom/SkeletonTable'
-import {get} from 'lodash'
-import FormAccount from './FormAccount'
+import {compact, get} from 'lodash'
 import { KEY_STORED, ROLE, ROLE_VI } from '../../constant/defaultValue'
+import FormGroupRoom from './FormGroupRoom'
 export default function Index() {
     const [visible,setVisible] = useState(false)
+    const [optionsStaff,setOptionsStaff] = useState([])
     const [profile,setProfile] = useState(null)
     const [select,setSelect] = useState(null)
     const [loading,setLoading] = useState(false)
     const [submitLoading,setSubmitLoading] = useState(false)
-    const [accounts,setAccounts] = useState([])
+    const [groupRooms,setGroups] = useState([])
     const onCancel = () => {
         setVisible(false)
         setSelect(null)
     }
-    const handleOpen = (account) => {
+    const handleOpen = (groupRoom) => {
         setVisible(true)
-        account && setSelect(account)
+        groupRoom && setSelect(groupRoom)
     }
-    const setNewAccount = (newAccount) => setAccounts([...accounts,newAccount])
-    const setNewAccountUpdate = (newAccount) => setAccounts(accounts.map(e => {
-        if(e._id === newAccount._id) return newAccount
+    const setNewGroup = (newGroup) => setGroups([...groupRooms,newGroup])
+    const setNewGroupRoomUpdate = (newGroup) => setGroups(groupRooms.map(e => {
+        if(e._id === newGroup._id) return newGroup
         return e
     }))
     useEffect(() => {
         const fetch = async () => {
             setLoading(true)
-            const res = await api.account.getAll()
-            setAccounts(res)
+            const res = await api.groupRoom.getAll()
+            setGroups(res)
             setLoading(false)
         }
-        fetch()
-    },[])
+       !visible && fetch()
+    },[visible])
     useEffect(() => {
         const acc = JSON.parse(localStorage.getItem(KEY_STORED))
         setProfile(acc)
       },[localStorage.getItem(KEY_STORED)])
+    useEffect(() => {
+        const fetch = async () => {
+            const res = await api.account.getAll()
+            const optionsStaff = res?.map(e => {
+                if(e.role !== ROLE.superAdmin){
+                    return {
+                        label:get(e,'name',''),
+                        value:get(e,'_id',''),
+                    }
+                }
+            })
+            setOptionsStaff(compact(optionsStaff))
+        }   
+        fetch()
+    },[])
     const columns = [
         {
             title:'Tên',
@@ -48,22 +64,22 @@ export default function Index() {
             // render : (item) => <Tag color='blue'>{item || ''}</Tag>
         },
         {
-            title:'Tài khoản',
-            key : 'username',
-            dataIndex : 'username',
+            title:'Số tầng',
+            key : 'countFloor',
+            dataIndex : 'countFloor',
             // render : (item) => <Tag color='blue'>{item || ''}</Tag>
         },
         {
-            title:'Mật khẩu',
-            key : 'password',
-            dataIndex : 'password',
+            title:'Số phòng',
+            key : 'countRoom',
+            dataIndex : 'countRoom',
             // render : (item) => <Tag color='blue'>{item || ''}</Tag>
         },
         {
-            title:'Vai trò',
-            key : 'role',
-            dataIndex : 'role',
-            render : (item) => ROLE_VI[item] || ''
+            title:'Người quản lý',
+            key : 'idAccount',
+            dataIndex : 'idAccount',
+            render : (item) => get(item,'name','')
         },
         {
             title:'Thao tác',
@@ -79,11 +95,11 @@ export default function Index() {
   return <>
     {get(profile,'role') === ROLE.superAdmin ?  <div>
         <Row justify='end' style={{margin : '10px 0'}}>
-            <Col><Button loading={submitLoading} onClick={() => handleOpen()}  type='primary' >Thêm tài khoản</Button></Col>
+            <Col><Button loading={submitLoading} onClick={() => handleOpen()}  type='primary' >Thêm Khu nhà</Button></Col>
         </Row>
-        {loading ? <SkeletonTable rowCount={5} columns={columns}/> :<Table pagination={false} dataSource={accounts} columns={columns}/>}
+        {loading ? <SkeletonTable rowCount={5} columns={columns}/> :<Table pagination={false} dataSource={groupRooms} columns={columns}/>}
         <Modal open={visible} footer={null} onCancel={onCancel} >
-        <FormAccount setNewAccountUpdate={setNewAccountUpdate} setNewAccount={setNewAccount} selectAccount={select} onCancel={onCancel}/>
+        <FormGroupRoom optionsStaff={optionsStaff} setNewGroupRoomUpdate={setNewGroupRoomUpdate} setNewGroup={setNewGroup} selectGroup={select} onCancel={onCancel}/>
         </Modal>
         {/* <Modal width={300} style={{textAlign : 'center'}} open={isOpenModalDelete} footer={null} onCancel={onCancelModalDelete}>
         <Typography.Title level={4}>
