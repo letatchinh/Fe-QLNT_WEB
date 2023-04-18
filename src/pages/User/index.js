@@ -1,5 +1,5 @@
 import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons'
-import { Button, Col, Modal, Row, Table, Typography } from 'antd'
+import { Button, Col, Modal, Row, Table, Tag, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import api from '../../api'
@@ -55,6 +55,22 @@ export default function Index() {
             title:'Tên',
             key : 'name',
             dataIndex : 'name',
+        },
+        {
+            title:'Mã SV',
+            key : 'MaSv',
+            dataIndex : 'MaSv',
+        },
+        {
+            title:'Ngành',
+            key : 'branch',
+            dataIndex : 'branch',
+        },
+        {
+            title:'Sở thích',
+            key : 'hobbys',
+            dataIndex : 'hobbys',
+            render: (item) => item?.map(e => <Tag color='blue-inverse'>{get(e,'name','')}</Tag>)
         },
         {
             title:'CMND',

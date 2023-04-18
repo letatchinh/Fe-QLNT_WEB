@@ -1,3 +1,7 @@
 .navbar{
     box-shadow: 0 0 5px 2px black;
 }
+.ant-dropdown-menu-item{
+    padding: 0!important;
+    height: 30px!important;
+}

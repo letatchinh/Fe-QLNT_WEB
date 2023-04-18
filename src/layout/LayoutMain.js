@@ -1,16 +1,20 @@
 import {
     DesktopOutlined,
     PieChartOutlined,
+    TeamOutlined,
     UserAddOutlined,
     UserOutlined,
   } from "@ant-design/icons";
-  import { Breadcrumb, Layout, Menu, theme } from "antd";
+  import { Avatar, Breadcrumb, Button, Dropdown, Layout, Menu, Row, theme, Typography } from "antd";
   import "antd/dist/reset.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PATH_APP } from "../routes/path";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { KEY_STORED } from "../constant/defaultValue";
+import HeaderMain from "./HeaderMain";
+
   const { Header, Content, Footer, Sider } = Layout;
   function getItem(label, key, icon, children) {
     return {
@@ -20,10 +24,14 @@ import 'react-toastify/dist/ReactToastify.css';
       label,
     };
   }
-  const items = [
+  const itemsNavbar = [
     getItem("Thống kê", PATH_APP.main.dashboard, <PieChartOutlined />),
     getItem("Danh sách phòng trọ", PATH_APP.rooms.root, <DesktopOutlined />),
-    getItem("Danh sách người dùng", PATH_APP.user.root, <UserAddOutlined />),
+    getItem("Quản lý tài khoản", PATH_APP.account.root, <TeamOutlined />),
+    getItem("Quản lí sinh viên", "sub2", <UserAddOutlined />,[
+      getItem("Danh sách sinh viên", PATH_APP.user.root),
+      getItem("Danh sách sở thích", PATH_APP.user.hobby),
+    ]),
     getItem("Quản lí phòng trọ", "sub1", <UserOutlined />, [
       getItem("Thêm phòng trọ", PATH_APP.rooms.create),
       getItem("Tạo brem phòng", PATH_APP.brem.create),
@@ -32,11 +40,13 @@ import 'react-toastify/dist/ReactToastify.css';
     ]),
   ];
 export default function LayoutMain({children,title}) {
+
     const navigate = useNavigate();
+    useEffect(() => {
+      const account = localStorage.getItem(KEY_STORED)
+    },[localStorage.getItem(KEY_STORED)])
   const [collapsed, setCollapsed] = useState(false);
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+
   const handleMenuClick = (e) => {
     navigate(e.key,{replace : true});
   };
@@ -60,20 +70,16 @@ export default function LayoutMain({children,title}) {
         }}
       />
       <Menu
+      disabled={!localStorage.getItem(KEY_STORED)}
         onClick={handleMenuClick}
         theme="dark"
-        defaultSelectedKeys={["1"]}
+        defaultSelectedKeys={[PATH_APP.main.dashboard]}
         mode="inline"
-        items={items}
+        items={itemsNavbar}
       />
     </Sider>
     <Layout className="site-layout">
-      <Header
-        style={{
-          padding: 0,
-          background: colorBgContainer,
-        }}
-      />
+     <HeaderMain />
       <Content
         style={{
           margin: "0 16px",

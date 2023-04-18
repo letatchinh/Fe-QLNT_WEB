@@ -8,9 +8,13 @@ import UpdateRoom from '../pages/UpdateRoom/index';
 import Charge from '../pages/Charge/index';
 import CreateBrem from '../pages/CreateBrem/index';
 import User from '../pages/User/index';
+import Login from '../pages/Login/Index';
+import Account from '../pages/Account/Index';
+import Hobby from '../pages/User/Hobby';
 
 const adminRoutes = [
   { path: '/', element: <Dashboard/>, title:"Thống kê" },
+  { path: '/login', element: <Login/>, title:"Đăng nhập" },
   {
     path: PATH_APP.rooms.root,
     element: <Rooms />,
@@ -39,7 +43,17 @@ const adminRoutes = [
   {
     path: PATH_APP.user.root,
     element: <User/>,
-    title:"Quản lí người dùng"
+    title:"Quản lí sinh viên"
+  },
+  {
+    path: PATH_APP.user.hobby,
+    element: <Hobby/>,
+    title:"Quản lí sở thích"
+  },
+  {
+    path: PATH_APP.account.root,
+    element: <Account/>,
+    title:"Quản lí tài khoản"
   },
 ]
 export { adminRoutes};

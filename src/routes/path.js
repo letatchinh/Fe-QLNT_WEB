@@ -9,6 +9,7 @@ const ROOTS = {
 export const PATH_APP = {  
     main: {
       dashboard: path(ROOTS.app, '/'),
+      login: path(ROOTS.app, '/login'),
     },
   
     rooms: {
@@ -22,7 +23,11 @@ export const PATH_APP = {
     },
     user: {
       root:path(ROOTS.app,'/user'),
+      hobby:path(ROOTS.app,'/hobby'),
     },
+    account:{
+      root:path(ROOTS.app,'/account'),
+    }
   
   
   };
