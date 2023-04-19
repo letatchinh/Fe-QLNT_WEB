@@ -1,0 +1,40 @@
+.haveRoom{
+    height: 22px;
+    min-width: 22px;
+    line-height: 0;
+    border-radius: 8px;
+    cursor: default;
+    align-items: center;
+    white-space: nowrap;
+    display: inline-flex;
+    justify-content: center;
+    padding: 0 8px;
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    background-color: #52c41a;
+    color: #fff;
+    border-radius: 20px;
+    padding: 12px 15px;
+}
+.notHaveRoom{
+    height: 22px;
+    min-width: 22px;
+    line-height: 0;
+    border-radius: 8px;
+    cursor: default;
+    align-items: center;
+    white-space: nowrap;
+    display: inline-flex;
+    justify-content: center;
+    padding: 0 8px;
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    background-color: #f5222d;
+    color: #fff;
+    border-radius: 20px;
+    padding: 12px 15px;
+}

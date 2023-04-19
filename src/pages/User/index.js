@@ -6,12 +6,14 @@ import api from '../../api'
 import SkeletonTable from '../../components/comom/SkeletonTable'
 import FormUser from './FormUser'
 import {get} from 'lodash'
+import './index.css'
 export default function Index() {
     const [visible,setVisible] = useState(false)
     const [selectIdDelete,setSelectIdDelete] = useState(null)
     const [isOpenModalDelete,setIsOpenModalDelete] = useState(false)
     const [select,setSelect] = useState(null)
     const [user,setUser] = useState([])
+    console.log(user,"user");
     const [loading,setLoading] = useState(false)
     const onCancel = () => {
         setVisible(false)
@@ -45,7 +47,16 @@ export default function Index() {
         const fetch = async () => {
             setLoading(true)
             const res = await api.user.getAll()
-            setUser(res)
+            const rooms = await api.room.getAll()
+            console.log(rooms,"rooms");
+            const newusers = res?.map(user => {
+                const findOne = rooms.find(room => room.users.some(e => get(e,'_id') === get(user,'_id')))
+                if(findOne){
+                    return {...user,roomUser : findOne}
+                }
+                return {...user,roomUser : null}
+            })
+            setUser(newusers)
             setLoading(false)
         }
         !visible && fetch()
@@ -93,9 +104,18 @@ export default function Index() {
             dataIndex : 'email',
         },
         {
+            title:'Tình trạng',
+            key : 'roomUser',
+            align:'center',
+            dataIndex : 'roomUser',
+            render :(item,record) => item ? <span strong className='haveRoom'>Đã có phòng</span> : <span strong className='notHaveRoom'>Chưa có phòng</span> 
+        },
+        {
             title:'Thao tác',
             key : 'action',
             dataIndex : 'action',
+            fixed:'right',
+            width : 150,
             render:(item,record,index) => <div>
                 <Button onClick={() => handleOpen(record)}><EditTwoTone /></Button>
                 <Button onClick={() => handleOpenModalDelete(record._id)}><DeleteTwoTone /></Button>
@@ -108,7 +128,7 @@ export default function Index() {
             <Col></Col>
             <Col><Button onClick={() => handleOpen()}>Thêm người dùng</Button></Col>
         </Row>
-        {loading ? <SkeletonTable rowCount={5} columns={columns}/> :<Table dataSource={user} columns={columns}/>}
+        {loading ? <SkeletonTable rowCount={5} columns={columns}/> :<Table scroll={{x : 2000}} dataSource={user} columns={columns}/>}
         <Modal open={visible} footer={null} onCancel={onCancel} >
         <FormUser selectUser={select} onCancel={onCancel}/>
         </Modal>
