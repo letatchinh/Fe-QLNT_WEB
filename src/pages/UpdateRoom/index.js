@@ -18,12 +18,33 @@ import LoadingPage from "../../components/comom/LoadingPage";
 export default function Index() {
   const [form] = Form.useForm()
   const {id} = useParams()
+  const [loadingLoadPage,setLoadingLoadPage] = useState(false)
+  const [GroupRoom, setGroupRoom] = useState([]);
+  const [groupSelect, setGroupSelect] = useState(null);
+  const [opTionsGroupRoom, setOpTionsGroupRoom] = useState([]);
   const [loading,setLoading] = useState(false)
   const [brem, setBrem] = useState([]);
   const [opTionsbrem, setOpTionsBrem] = useState([]);
   const [user, setUser] = useState([]);
+  const [AllUser, setAllUser] = useState([]);
   const [listUser, setListUser] = useState([]);
   const [selectBrem, setSelectBrem] = useState(null);
+  async function handleDropdownVisibleChange(open) {
+    if(open){
+      const res = await api.room.getListStudent()
+      if(res){
+        const options = res.listUser.map((e) => ({
+          label: e.name,
+          value: e._id,
+        }));
+        setUser(options);
+      }
+     
+    }
+  }
+  const handleChangeGroupRoom = (value) => {
+    setGroupSelect(GroupRoom.find((e) => e._id === value));
+  };
   const onhandleChange = (value) => {
     const exist = listUser.some(e => e === value)
     if(!exist){
@@ -42,13 +63,15 @@ export default function Index() {
   };
   useEffect(() => {
     const fetch = async () => {
-      setLoading(true)
+      setLoadingLoadPage(true)
       Promise.allSettled([
         await api.brem.getAll(),
+        await api.room.getListStudent(),
+        await api.groupRoom.getAll(),
         await api.user.getAll(),
-      ]).then(([brems, users]) => {
+      ]).then(([brems, users,groupRoom,allUser]) => {
         if (brems.status === "fulfilled") {
-          const options = brems.value.map((e) => ({
+          const options = brems?.value?.map((e) => ({
             label: e.name,
             value: e._id,
           }));
@@ -56,13 +79,28 @@ export default function Index() {
           setBrem(brems.value)
         }
         if (users.status === "fulfilled") {
-          const options = users.value.map((e) => ({
+          const options = users?.value?.listUser?.map((e) => ({
             label: e.name,
             value: e._id,
           }));
           setUser(options);
         }
-        setLoading(false)
+        if (groupRoom.status === "fulfilled") {
+          const options = groupRoom.value.map((e) => ({
+            label: e.name,
+            value: e._id,
+          }));
+          setOpTionsGroupRoom(options);
+          setGroupRoom(groupRoom.value);
+        }
+        if (allUser.status === "fulfilled") {
+          const options = allUser?.value?.map((e) => ({
+            label: e.name,
+            value: e._id,
+          }));
+          setAllUser(options);
+        }
+        setLoadingLoadPage(false)
       });
     };
     fetch();
@@ -74,6 +112,7 @@ export default function Index() {
       if(res){
         const {roomNumber , people,idBrem,equipment} = res
         form.setFieldsValue({
+          ...res,
           roomNumber,
           equipment,
           idBrem:get(idBrem,'_id')
@@ -100,27 +139,92 @@ export default function Index() {
   };
   return (
     <div>
-    <LoadingPage loading={loading}/>
+    <LoadingPage loading={loadingLoadPage}/>
       <Divider>Tạo phòng</Divider>
       <Form
-      form={form}
+        form={form}
         labelAlign="left"
         wrapperCol={{ md: 12, lg: 12, sm: 24, xs: 24 }}
         labelCol={{ md: 10, lg: 10 }}
         onFinish={onFinish}
       >
-        <Form.Item label="Số phòng" name="roomNumber">
+        <Form.Item
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng điền !",
+            },
+          ]}
+          label="Khu nhà"
+          name="idGroupRoom"
+        >
+          <Select loading={loadingLoadPage} onChange={handleChangeGroupRoom} options={opTionsGroupRoom} />
+        </Form.Item>
+        <Form.Item
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng điền !",
+            },
+          ]}
+          label="Số người tối đa"
+          name="maxUser"
+          help="Tối đa 6 người"
+        >
+          <InputNumber disabled={!groupSelect} min={1} max={6} />
+        </Form.Item>
+        <Form.Item
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng điền !",
+            },
+          ]}
+          label="Tầng"
+          name="floor"
+          help={groupSelect ? `Toà nhà này tối đa ${get(groupSelect,'countFloor',6)} tâng` : ''}
+        >
+          <InputNumber  disabled={!groupSelect} min={1} max={get(groupSelect,'countFloor',6)} />
+        </Form.Item>
+        <Form.Item
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng điền !",
+            },
+          ]}
+          label="Số phòng"
+          name="roomNumber"
+        >
           <InputNumber />
         </Form.Item>
-        <Form.Item label="Trang Thiết bị" name="equipment">
+        <Form.Item
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng điền !",
+            },
+          ]}
+          label="Trang Thiết bị"
+          name="equipment"
+        >
           <TextArea rows={4} />
         </Form.Item>
-        <Form.Item label="Người ở" name="people">
-          <Select onChange={onhandleChange} options={user} />
+        <Form.Item
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng điền !",
+            },
+          ]}
+          label="Người ở"
+          name="people"
+        >
+          <Select onDropdownVisibleChange={handleDropdownVisibleChange} loading={loadingLoadPage} onChange={onhandleChange} options={user} />
         </Form.Item>
         <Row>
           {listUser?.map((e) => {
-            const findOne = user.find((item) => item.value === e);
+            const findOne = AllUser.find((item) => item.value === e);
             return (
               <Tag
                 color="blue"
@@ -132,33 +236,77 @@ export default function Index() {
             );
           })}
         </Row>
-        <Form.Item label="Chọn brem phòng" name="idBrem">
-          <Select onChange={onChangeBrem} options={opTionsbrem} />
+        <Form.Item
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng điền !",
+            },
+          ]}
+          label="Chọn brem phòng"
+          name="idBrem"
+        >
+          <Select loading={loadingLoadPage} onChange={onChangeBrem} options={opTionsbrem} />
         </Form.Item>
-       {selectBrem && <Parameter brem={selectBrem}/>}
-       {/* <Row>
-          <Col span={10}>
-            <Form.Item  label='Số điện hiện tại' name='electricity'>
-              <InputNumber style={{width : '150px'}}/>
-            </Form.Item>
-          </Col>
-          <Col span={14}>
-            <Form.Item label='Số nước hiện tại' name='water'>
-              <InputNumber style={{width : '150px'}}/>
-            </Form.Item>
-          </Col>
-        </Row> */}
+        {selectBrem && <Parameter brem={selectBrem} />}
         <Row>
-        
           <Button
             style={{ margin: "0 auto", width: "200px" }}
             type="primary"
             htmlType="submit"
+            loading={loading}
           >
-            Cập nhật
+            Tạo phòng
           </Button>
         </Row>
       </Form>
     </div>
   );
 }
+
+
+{/* <Form
+form={form}
+  labelAlign="left"
+  wrapperCol={{ md: 12, lg: 12, sm: 24, xs: 24 }}
+  labelCol={{ md: 10, lg: 10 }}
+  onFinish={onFinish}
+>
+  <Form.Item label="Số phòng" name="roomNumber">
+    <InputNumber />
+  </Form.Item>
+  <Form.Item label="Trang Thiết bị" name="equipment">
+    <TextArea rows={4} />
+  </Form.Item>
+  <Form.Item label="Người ở" name="people">
+    <Select onChange={onhandleChange} options={user} />
+  </Form.Item>
+  <Row>
+    {listUser?.map((e) => {
+      const findOne = user.find((item) => item.value === e);
+      return (
+        <Tag
+          color="blue"
+          closable
+          onClose={() => deleteTag(findOne.value)}
+        >
+          {get(findOne,'label','')}
+        </Tag>
+      );
+    })}
+  </Row>
+  <Form.Item label="Chọn brem phòng" name="idBrem">
+    <Select onChange={onChangeBrem} options={opTionsbrem} />
+  </Form.Item>
+ {selectBrem && <Parameter brem={selectBrem}/>}
+  <Row>
+  
+    <Button
+      style={{ margin: "0 auto", width: "200px" }}
+      type="primary"
+      htmlType="submit"
+    >
+      Cập nhật
+    </Button>
+  </Row>
+</Form> */}
