@@ -6,4 +6,5 @@ export const room = {
     getById : (id) => requester.get(`/room/${id}`),
     update : (room) => requester.put(`/room/${room._id}`,room),
     getListStudent : () => requester.get(`/room/getListStudent`),
+    findRoomForStudent : (data) => requester.post(`/room/findRoomForStudent`,data),
 }

@@ -16,11 +16,11 @@ export default function FormAccount({selectAccount,onCancel,setNewAccount,setNew
     },[selectAccount])
     const onFinish = async(values) =>{
         if(selectAccount){
-            const res = await api.account.update({values,_id:selectAccount._id})
+            const res = await api.account.update({...values,_id:selectAccount._id})
             if(res.status){
                 toast.success("Cập nhật tài khoản thành công")
                 form.resetFields()
-                setNewAccountUpdate(get(res,'data',{}))
+                setNewAccountUpdate({...selectAccount,...values,_id:selectAccount._id})
                 onCancel()
             }
             else{
@@ -71,7 +71,7 @@ export default function FormAccount({selectAccount,onCancel,setNewAccount,setNew
         },
       ]}
     >
-        <Input disabled/>
+        <Input disabled={selectAccount}/>
     </Form.Item>
     <Form.Item
     label='Mật khẩu'

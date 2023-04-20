@@ -4,6 +4,7 @@ import {
   Divider,
   Form,
   InputNumber,
+  Modal,
   Row,
   Select,
   Tag,
@@ -19,6 +20,8 @@ import Parameter from "../../components/Brem/Parameter";
 export default function Index() {
   const [form] = Form.useForm();
   const [loading,setLoading] = useState(false)
+
+  
   const [loadingLoadPage,setLoadingLoadPage] = useState(false)
   const [brem, setBrem] = useState([]);
   const [opTionsbrem, setOpTionsBrem] = useState([]);
@@ -45,6 +48,9 @@ export default function Index() {
   const handleChangeGroupRoom = (value) => {
     setGroupSelect(GroupRoom.find((e) => e._id === value));
   };
+
+
+
   const onhandleChange = (value) => {
     const exist = listUser.some((e) => e === value);
     if (!exist) {
@@ -56,9 +62,12 @@ export default function Index() {
     const findBrem = brem.find((e) => e._id === value);
     setSelectBrem(findBrem);
   };
-  const deleteTag = (removedTag) => {
-    const newTags = listUser.filter((tag) => tag !== removedTag);
-    setListUser(newTags);
+  const deleteTag = (el,removedTag) => {
+    el.preventDefault();
+    setListUser((currentValue)=>{
+      let newValue = currentValue.filter((e)=>e!==removedTag)
+      return [...newValue]
+    })
   };
   useEffect(() => {
     const fetch = async () => {
@@ -212,9 +221,10 @@ export default function Index() {
             const findOne = AllUser.find((item) => item.value === e);
             return (
               <Tag
+              key={e}
                 color="blue"
                 closable
-                onClose={() => deleteTag(findOne.value)}
+                onClose={(es) => deleteTag(es,findOne.value)}
               >
                 {findOne.label || ''}
               </Tag>
@@ -275,6 +285,7 @@ export default function Index() {
           </Button>
         </Row>
       </Form>
+     
     </div>
   );
 }

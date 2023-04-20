@@ -28,6 +28,8 @@ export default function Index() {
   const [user, setUser] = useState([]);
   const [AllUser, setAllUser] = useState([]);
   const [listUser, setListUser] = useState([]);
+  console.log(listUser,"listUser");
+  console.log(AllUser,"AllUser");
   const [selectBrem, setSelectBrem] = useState(null);
   async function handleDropdownVisibleChange(open) {
     if(open){
@@ -57,9 +59,12 @@ export default function Index() {
     const findBrem = brem.find(e => e._id === value);
     setSelectBrem(findBrem);
   };
-  const deleteTag = (removedTag) => {
-    const newTags = listUser.filter((tag) => tag !== removedTag);
-    setListUser(newTags);
+  const deleteTag = (el,removedTag) => {
+    el.preventDefault();
+    setListUser((currentValue)=>{
+      let newValue = currentValue.filter((e)=>e!==removedTag)
+      return [...newValue]
+    })
   };
   useEffect(() => {
     const fetch = async () => {
@@ -229,7 +234,7 @@ export default function Index() {
               <Tag
                 color="blue"
                 closable
-                onClose={() => deleteTag(findOne.value)}
+                onClose={(el) => deleteTag(el,e)}
               >
                 {get(findOne,'label','')}
               </Tag>
@@ -256,7 +261,7 @@ export default function Index() {
             htmlType="submit"
             loading={loading}
           >
-            Tạo phòng
+            Cập nhật phòng
           </Button>
         </Row>
       </Form>
