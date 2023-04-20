@@ -1,5 +1,5 @@
-import { DeleteTwoTone, EditTwoTone, MonitorOutlined } from "@ant-design/icons";
-import { Button, Col, Divider, Modal, Row, Switch, Table, Tag, Typography } from "antd";
+import { DeleteTwoTone, EditTwoTone, Loading3QuartersOutlined, MonitorOutlined } from "@ant-design/icons";
+import { Button, Col, Divider, Modal, Row, Spin, Switch, Table, Tag, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import api from "../../api";
@@ -7,37 +7,41 @@ import SkeletonTable from "../../components/comom/SkeletonTable";
 import FormUser from "./FormUser";
 import { get } from "lodash";
 import "./index.css";
+import ListRoomFind from "./ListRoomFind";
+
 export default function Index() {
   const [visible, setVisible] = useState(false);
 
   const [isOpenModalFind,setIsOpenModalFind] = useState(false)
-  const [selectUserFind,setSelectUserFind] = useState(null)
-    console.log(selectUserFind,"selectUserFind");
-
-
+  const [roomFind,setRoomFind] = useState(null)
+  const [loadingFind,setLoadingFind] = useState(false)
   const [isShowHaveRoom, setIsShowHaveRoom] = useState(true);
   const [selectIdDelete, setSelectIdDelete] = useState(null);
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
   const [select, setSelect] = useState(null);
   const [user, setUser] = useState([]);
-  console.log(user, "user");
   const [loading, setLoading] = useState(false);
   const onCancel = () => {
     setVisible(false);
   };
   const handleOpen = (item) => {
-    console.log(item, "item");
     if (item) setSelect(item);
     setVisible(true);
   };
   ////////////////////////////////
   const onCloseModalFind = () => {
     setIsOpenModalFind(false);
-    setSelectUserFind(null);
+    setRoomFind(null);
   };
-  const onOpenModalFind = (select) => {
+  const onOpenModalFind = async(select) => {
+
     setIsOpenModalFind(true);
-    setSelectUserFind(select);
+    setLoadingFind(true)
+    const {status,data} = await api.room.findRoomForStudent({...select})
+    if(status){
+      setRoomFind(get(data,'result'))
+    }
+    setLoadingFind(false)
   };
   ////////////////////////////////
   const onCancelModalDelete = () => {
@@ -91,6 +95,11 @@ export default function Index() {
       key: "name",
       dataIndex: "name",
       fixed: "left",
+    },
+    {
+      title: "Giới tính",
+      key: "gender",
+      dataIndex: "gender",
     },
     {
       title: "Mã SV",
@@ -214,7 +223,10 @@ export default function Index() {
         </Row>
       </Modal>
       <Modal style={{textAlign : 'center'}} width={1000} open={isOpenModalFind}  onCancel={onCloseModalFind} footer={null}>
-        <Divider><Typography.Title level={4}>Danh sách phòng phù hợp </Typography.Title></Divider>
+     <Divider><Typography.Title level={4}>Danh sách phòng phù hợp </Typography.Title></Divider>
+    {loadingFind ? <Spin tip='Đang tìm phòng...'/> : <div style={{maxHeight : '1000px', overflowY : 'scroll'}}>
+        {roomFind?.map(e => <ListRoomFind roomFind={e}/>)}
+     </div>}
       </Modal>
     </div>
   );

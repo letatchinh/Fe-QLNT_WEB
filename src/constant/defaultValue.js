@@ -20,3 +20,13 @@ export const ROLE_VI = {
     staff: 'Quản lý'
 }
 export const KEY_STORED = "loginKtx"
+export const INFO_VI = {
+    countryside : 'Quê quán',
+    branch : 'Ngành học',
+    hobbys:'Sở thích'
+}
+export const INFO = {
+    countryside : 'countryside',
+    branch : 'branch',
+    hobbys:'hobbys'
+}
