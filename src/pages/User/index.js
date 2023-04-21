@@ -1,5 +1,5 @@
 import { DeleteTwoTone, EditTwoTone, Loading3QuartersOutlined, MonitorOutlined } from "@ant-design/icons";
-import { Button, Col, Divider, Modal, Row, Spin, Switch, Table, Tag, Typography } from "antd";
+import { Button, Col, Divider, Modal, Result, Row, Spin, Switch, Table, Tag, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import api from "../../api";
@@ -14,6 +14,8 @@ export default function Index() {
 
   const [isOpenModalFind,setIsOpenModalFind] = useState(false)
   const [roomFind,setRoomFind] = useState(null)
+  const [roomTemp,setRoomTemp] = useState(null)
+  const [userSelect,seUserSelect] = useState(null)
   const [loadingFind,setLoadingFind] = useState(false)
   const [isShowHaveRoom, setIsShowHaveRoom] = useState(true);
   const [selectIdDelete, setSelectIdDelete] = useState(null);
@@ -32,17 +34,25 @@ export default function Index() {
   const onCloseModalFind = () => {
     setIsOpenModalFind(false);
     setRoomFind(null);
+    setRoomTemp(null)
+    seUserSelect(null)
   };
+  
   const onOpenModalFind = async(select) => {
-
+    seUserSelect(select)
     setIsOpenModalFind(true);
     setLoadingFind(true)
     const {status,data} = await api.room.findRoomForStudent({...select})
     if(status){
+      setRoomTemp(get(data,'listNotGender'))
       setRoomFind(get(data,'result'))
     }
     setLoadingFind(false)
   };
+  const setRoomForUser = (newRoom) => {
+    const newUser = {...userSelect,roomUser: newRoom}
+    setUser(user.map(user => (user._id === newUser._id) ? newUser : user))
+  }
   ////////////////////////////////
   const onCancelModalDelete = () => {
     setIsOpenModalDelete(false);
@@ -74,7 +84,6 @@ export default function Index() {
       setLoading(true);
       const res = await api.user.getAll();
       const rooms = await api.room.getAll();
-      console.log(rooms, "rooms");
       const newusers = res?.map((user) => {
         const findOne = rooms.find((room) =>
           room.users.some((e) => get(e, "_id") === get(user, "_id"))
@@ -225,7 +234,12 @@ export default function Index() {
       <Modal style={{textAlign : 'center'}} width={1000} open={isOpenModalFind}  onCancel={onCloseModalFind} footer={null}>
      <Divider><Typography.Title level={4}>Danh sách phòng phù hợp </Typography.Title></Divider>
     {loadingFind ? <Spin tip='Đang tìm phòng...'/> : <div style={{maxHeight : '1000px', overflowY : 'scroll'}}>
-        {roomFind?.map(e => <ListRoomFind roomFind={e}/>)}
+        {roomFind && roomFind.length > 0 ? roomFind?.map(e => <ListRoomFind setRoomForUser={setRoomForUser} onCloseModalFind={onCloseModalFind} userSelect={userSelect} roomFind={e}/>) :<Result
+    status="403"
+    // title="403"
+    subTitle="Không còn phòng nào phù hợp với sinh viên này"
+    extra={<Button onClick={() => setRoomFind(roomTemp)} type="primary">Xem danh sách phòng còn trống</Button>}
+  />}
      </div>}
       </Modal>
     </div>

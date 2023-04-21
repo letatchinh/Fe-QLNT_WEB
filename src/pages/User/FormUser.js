@@ -35,8 +35,8 @@ export default function FormUser({onCancel,selectUser}) {
     useEffect(() => {
         form.resetFields()
         if(selectUser){
-            const {name,CMND,countryside,phone,email,hobbys} = selectUser
-            form.setFieldsValue({name,CMND,countryside,phone,email})
+            const {name,CMND,countryside,phone,email,hobbys,gender,MaSv,branch} = selectUser
+            form.setFieldsValue({name,CMND,countryside,phone,email,gender,MaSv,branch})
             setHobbys(hobbys?.map(e => e._id))
         }
         const fetchHobby = async() => {
@@ -53,9 +53,12 @@ export default function FormUser({onCancel,selectUser}) {
         }
        
       };
-      const deleteTag = (removedTag) => {
-        const newTags = hobbys.filter((tag) => tag !== removedTag);
-        setHobbys(newTags);
+      const deleteTag = (el,removedTag) => {
+        el.preventDefault();
+        setHobbys((currentValue)=>{
+      let newValue = currentValue.filter((e)=>e!==removedTag)
+      return [...newValue]
+    })
       };
   return (
     <div>
@@ -128,13 +131,14 @@ export default function FormUser({onCancel,selectUser}) {
             <Typography.Text>Sở thích</Typography.Text>
           </Col>
           <Col span={14}>
-          {hobbys?.map((e) => {
+          {hobbys?.map((e,index) => {
             const findOne = listHobbys?.find((item) => item.value === e);
             return (
               <Tag
+              key={index}
                 color="blue"
                 closable
-                onClose={() => deleteTag(findOne.value)}
+                onClose={(el) => deleteTag(el,findOne.value)}
               >
                 {get(findOne,'label')}
               </Tag>
