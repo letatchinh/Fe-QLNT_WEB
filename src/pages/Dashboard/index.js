@@ -1,4 +1,4 @@
-import { Card, Col, DatePicker, Row, Select, Statistic, Typography } from 'antd';
+import { Card, Col, DatePicker, Divider, Row, Select, Statistic, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import api from '../../api';
 import { formatDate, getMonthNow } from '../../utils';
@@ -46,6 +46,7 @@ export default function Index() {
   },[profile])
   return (
     <div>
+    <Divider>{get(data,'groupRooms') ?  `Khu nhà ${get(data,'groupRooms.name','')}` : 'Tất cả phòng'}</Divider>
       <Row style={{alignItems : 'center'}} gutter={16}>
    <Col span={6}>
    <Row style={{alignItems : 'center'}}>

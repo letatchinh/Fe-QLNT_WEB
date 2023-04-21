@@ -57,113 +57,8 @@ export default function FormCharge({ room, onCancel,setNewRoom }) {
     get(meters, "meterPre.electricity", 0);
   const waterUse =
     get(meters, "meterNow.water", 0) - get(meters, "meterPre.water", 0);
-    const html = <Row style={{ width: "100%", margin: "10px 0" }} align="bottom">
-    <Col span={24}>
-      <Descriptions bordered column={1}>
-        <Descriptions.Item
-          {...descriptionItemProps}
-          label={
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <span>Tiền điện tiêu thụ ({formatNumberThreeComma(electricityUse)})</span>
-            </div>
-          }
-        >
-          {formatNumberThreeComma(electricityUse * electricityPrice)}
-        </Descriptions.Item>
-        <Descriptions.Item
-          {...descriptionItemProps}
-          label={
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <span>Tiền nước tiêu thụ ({formatNumberThreeComma(waterUse)})</span>
-            </div>
-          }
-        >
-          {formatNumberThreeComma(waterUse * waterPrice)}
-        </Descriptions.Item>
-        <Descriptions.Item
-          {...descriptionItemProps}
-          label={
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <span>Tiền rác</span>
-            </div>
-          }
-        >
-          {trash}
-        </Descriptions.Item>
-        <Descriptions.Item
-          {...descriptionItemProps}
-          label={
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <span>Giá thuê phòng</span>
-            </div>
-          }
-        >
-          {rent}
-        </Descriptions.Item>
-        <Descriptions.Item
-          {...descriptionItemProps}
-          label={
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <span>Tiền Wifi</span>
-            </div>
-          }
-        >
-          {wifi}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          {...descriptionItemProps}
-          label={
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <span>Tổng tiền</span>
-            </div>
-          }
-        >
-          <Typography.Title level={3}>
-            {formatNumberThreeComma(
-              electricityUse * electricityPrice +
-                waterPrice * waterUse +
-                trash +
-                wifi +
-                rent
-            )}
-          </Typography.Title>
-        </Descriptions.Item>
-      </Descriptions>
-    </Col>
-  </Row>
   const onFinish = async(values) => {
-    console.log(values, "values");
+    const email = get(room,'people',[]).map(e => get(e,'userId.email',''))
     const submitData = {
       // html,
       idRoom: _id,
@@ -174,16 +69,28 @@ export default function FormCharge({ room, onCancel,setNewRoom }) {
       rent,
       trash,
       wifi,
+      email,
+      html :`<div style={{textAlign : 'center'}}>
+      <h1>Bạn đã thanh toán thành công ${electricityUse * electricityPrice +
+        waterPrice * waterUse +
+        trash +
+        wifi +
+        rent} VNĐ</h1>
+       <p> Số điện cũ ${get(meters, "meterPre.electricity", 0)}: > Số điện mới : ${get(meters, "meterNow.electricity", 0)}</p>
+       <p> Số nước cũ ${get(meters, "meterPre.water", 0)}: > Số nước mới : ${get(meters, "meterNow.water", 0)}</p>
+       <Typography.Text type='success'>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi ,từ Chủ trọ</Typography.Text>
+        </div>`,
       totalPrice :  electricityUse * electricityPrice +
       waterPrice * waterUse +
       trash +
       wifi +
       rent
     };
+    console.log(submitData,"submitData");
     const res = await api.bill.create(submitData)
-    console.log(res,"res");
     if(res){
       if(res.status){
+        
         toast.success("Thanh toán thành công")
         const newRoom = {...room,bill : res.createBill}
         setNewRoom(newRoom)

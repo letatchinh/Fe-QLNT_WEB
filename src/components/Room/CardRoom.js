@@ -1,5 +1,6 @@
-import { CheckCircleOutlined, CloseCircleOutlined, DollarCircleOutlined, EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
-import { Avatar, Card, Tag } from 'antd';
+import { CheckCircleOutlined, CloseCircleOutlined, DollarCircleOutlined, EditOutlined, EllipsisOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Card, Col, Row, Tag, Typography } from 'antd';
+import { get } from 'lodash';
 import { room } from '../../assets/image';
 import './index.css'
 const { Meta } = Card;
@@ -18,9 +19,14 @@ const CardRoom = ({item,handleOpen,handleUpdate}) => (
       <EllipsisOutlined key="ellipsis" />,
     ]}
   >
+  <Row style={{marginBottom : '10px'}}>
+    <Col push={1} span={5}><UserOutlined /></Col>
+    <Col span={4}><Typography.Text strong>{get(item,'people',[]).length}/{get(item,'maxUser',0)}</Typography.Text></Col>
+    <Col>{get(item,'maxUser',0) === get(item,'people',[]).length && <Tag color='warning'>Đã đầy</Tag>}</Col>
+  </Row>
     <Meta
       avatar={<Avatar src="https://joesch.moe/api/v1/random" />}
-      title={`Phòng số ${item.roomNumber}`}
+      title={<div>Phòng số {item.roomNumber}</div>}
       description={item.bill ?  <Tag icon={<CheckCircleOutlined />} color="success">
         Đã thanh toán
       </Tag> : <Tag icon={<CloseCircleOutlined />} color="error">
