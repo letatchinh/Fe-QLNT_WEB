@@ -31,7 +31,8 @@ const descriptionItemProps = {
 };
 const span = 12;
 export default function FormCharge({ room, onCancel,setNewRoom }) {
-  const { brems, _id } = room;
+  console.log(room,"room");
+  const { idBrem :brems, _id } = room;
   const { electricityPrice, rent, trash, waterPrice, wifi } = brems;
   const [meters, setMeter] = useState({ meterNow: null, meterPre: null });
   const [form] = Form.useForm();

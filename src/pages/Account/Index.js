@@ -59,6 +59,12 @@ export default function Index() {
             dataIndex : 'password',
             // render : (item) => <Tag color='blue'>{item || ''}</Tag>
         },
+        // {
+        //     title:'Quản lí khu nhà',
+        //     key : 'password',
+        //     dataIndex : 'password',
+        //     // render : (item) => <Tag color='blue'>{item || ''}</Tag>
+        // },
         {
             title:'Vai trò',
             key : 'role',

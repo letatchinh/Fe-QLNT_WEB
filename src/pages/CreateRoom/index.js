@@ -163,7 +163,7 @@ export default function Index() {
           ]}
           label="Số người tối đa"
           name="maxUser"
-          help="Tối đa 6 người"
+          // help="Tối đa 6 người"
         >
           <InputNumber disabled={!groupSelect} min={1} max={6} />
         </Form.Item>

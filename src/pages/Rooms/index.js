@@ -5,11 +5,17 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useRoutes } from "react-router-dom";
 import api from '../../api'
 import CardRoom from '../../components/Room/CardRoom'
+import { KEY_STORED } from '../../constant/defaultValue';
 import { PATH_APP } from '../../routes/path'
 import FormCharge from './FormCharge'
 
 export default function Index() {
 const [rooms,setRooms] = useState([])
+const [profile,setProfile] = useState(null)
+useEffect(() => {
+  const acc = JSON.parse(localStorage.getItem(KEY_STORED))
+  setProfile(acc)
+},[localStorage.getItem(KEY_STORED)])
 const [roomShow,setRoomShow] = useState(null)
 const [isSwitch,setIsSwitch] = useState(false)
 const navigate = useNavigate();
@@ -40,13 +46,13 @@ const setNewRoom = (newRoom) => {
 useEffect(() => {
   const fetch = async () => {
     setLoading(true)
-    const res = await api.room.getAll()
+    const res = await api.room.getAllById({id : profile._id,role : profile.role})
     setRooms(res)
     setRoomShow(res)
     setLoading(false)
   }
   fetch()
-},[])
+},[profile])
 const handleSwitch = (value) => {
   setIsSwitch(!value)
   if(!value){ // all

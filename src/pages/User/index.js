@@ -8,9 +8,11 @@ import FormUser from "./FormUser";
 import { get } from "lodash";
 import "./index.css";
 import ListRoomFind from "./ListRoomFind";
+import Search from "antd/es/input/Search";
 
 export default function Index() {
   const [visible, setVisible] = useState(false);
+  const [valueSearcher,setValueSearcher] = useState('')
 
   const [isOpenModalFind,setIsOpenModalFind] = useState(false)
   const [roomFind,setRoomFind] = useState(null)
@@ -22,6 +24,7 @@ export default function Index() {
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
   const [select, setSelect] = useState(null);
   const [user, setUser] = useState([]);
+  const [userTemp, setUserTemp] = useState([]);
   const [loading, setLoading] = useState(false);
   const onCancel = () => {
     setVisible(false);
@@ -51,7 +54,7 @@ export default function Index() {
   };
   const setRoomForUser = (newRoom) => {
     const newUser = {...userSelect,roomUser: newRoom}
-    setUser(user.map(user => (user._id === newUser._id) ? newUser : user))
+    setUser(user.map(user => user._id === newUser._id ? newUser : user))
   }
   ////////////////////////////////
   const onCancelModalDelete = () => {
@@ -62,6 +65,9 @@ export default function Index() {
     setIsOpenModalDelete(true);
     setSelectIdDelete(id);
   };
+  const handleSearch = () => {
+
+  }
   const handleDelete = async () => {
     const res = await api.user.delete(selectIdDelete);
     if (res.status) {
@@ -86,7 +92,7 @@ export default function Index() {
       const rooms = await api.room.getAll();
       const newusers = res?.map((user) => {
         const findOne = rooms.find((room) =>
-          room.users.some((e) => get(e, "_id") === get(user, "_id"))
+          room.people.some((e) => get(e, "userId._id") === get(user, "_id"))
         );
         if (findOne) {
           return { ...user, roomUser: findOne };
@@ -94,6 +100,7 @@ export default function Index() {
         return { ...user, roomUser: null };
       });
       setUser(newusers);
+      setUserTemp(newusers);
       setLoading(false);
     };
     !visible && fetch();
@@ -189,9 +196,17 @@ export default function Index() {
       ),
     },
   ];
+  const onSearch = (value) => {
+      setUserTemp(user.filter(e => e.name.toString().includes(value) ))
+  }
   return (
     <div>
       <Row style={{ margin: "10px 0" }} justify="space-between">
+      <Row gutter={16} align='middle'>
+       
+        <Col>
+        <Search allowClear value={valueSearcher} onChange={(e) => setValueSearcher(e.target.value)} placeholder="Nhập tên..." onSearch={onSearch} enterButton />
+        </Col>
         <Col>
           {" "}
           <Switch
@@ -200,6 +215,7 @@ export default function Index() {
           />{" "}
           <Typography.Text>Đã có phòng</Typography.Text>
         </Col>
+      </Row>
         <Col>
           <Button onClick={() => handleOpen()}>Thêm người dùng</Button>
         </Col>
@@ -209,7 +225,7 @@ export default function Index() {
       ) : (
         <Table
           scroll={{ x: 2000 }}
-          dataSource={isShowHaveRoom ? user : user.filter((e) => !e.roomUser)}
+          dataSource={isShowHaveRoom ? userTemp : userTemp.filter((e) => !e.roomUser)}
           columns={columns}
         />
       )}
