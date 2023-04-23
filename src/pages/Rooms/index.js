@@ -41,7 +41,14 @@ const setNewRoom = (newRoom) => {
     }
     return room
   })
+  const newRoomsShow = roomShow.map((room) => {
+    if(newRoom._id === room._id){
+      return newRoom
+    }
+    return room
+  })
   setRooms(newRooms)
+  setRoomShow(newRoomsShow)
 }
 useEffect(() => {
   const fetch = async () => {

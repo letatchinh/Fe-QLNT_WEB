@@ -18,6 +18,7 @@ export default function FormUser({onCancel,selectUser}) {
             if(res){
                 toast.success("Cập nhật người dùng thành công")
                 onCancel()
+                form.resetFields()
             }
             setLoading(false)
         }
@@ -27,6 +28,7 @@ export default function FormUser({onCancel,selectUser}) {
             if(res){
                 toast.success("Tạo người dùng thành công")
                 onCancel()
+                form.resetFields()
             }
             setLoading(false)
         }
@@ -72,12 +74,24 @@ export default function FormUser({onCancel,selectUser}) {
         <Form.Item
         label='Tên'
         name='name'
+        rules={[
+        {
+          required: true,
+          message: 'Please input this field!',
+        },
+      ]}
         >
             <Input />
         </Form.Item>
         <Form.Item
         label='Giới tính'
         name='gender'
+        rules={[
+        {
+          required: true,
+          message: 'Please input this field!',
+        },
+      ]}
         >
             <Radio.Group>
             <Radio value={GENDER.male}> {GENDER_VI.male} </Radio>
@@ -87,42 +101,84 @@ export default function FormUser({onCancel,selectUser}) {
         <Form.Item
         label='Chứng minh nhân dân / CCCD'
         name='CMND'
+        rules={[
+        {
+          required: true,
+          message: 'Please input this field!',
+        },
+      ]}
         >
             <InputNumber style={{width : '150px'}} />
         </Form.Item>
         <Form.Item
         label='Mã SV'
         name='MaSv'
+        rules={[
+        {
+          required: true,
+          message: 'Please input this field!',
+        },
+      ]}
         >
             <Input />
         </Form.Item>
         <Form.Item
         label='Ngành'
         name='branch'
+        rules={[
+        {
+          required: true,
+          message: 'Please input this field!',
+        },
+      ]}
         >
             <Input />
         </Form.Item>
         <Form.Item
         label='Quê quán'
         name='countryside'
+        rules={[
+        {
+          required: true,
+          message: 'Please input this field!',
+        },
+      ]}
         >
             <Input />
         </Form.Item>
         <Form.Item
         label='Số điện thoại'
         name='phone'
+        rules={[
+        {
+          required: true,
+          message: 'Please input this field!',
+        },
+      ]}
         >
             <Input />
         </Form.Item>
         <Form.Item
         label='Email'
         name='email'
+        rules={[
+        {
+          required: true,
+          message: 'Please input this field!',
+        },
+      ]}
         >
             <Input />
         </Form.Item>
         <Form.Item
         label='Sở thích'
         name='hobbys'
+        rules={[
+        {
+          required: true,
+          message: 'Please input this field!',
+        },
+      ]}
         >
             <Select onChange={onhandleChange} options={listHobbys}/>
         </Form.Item>

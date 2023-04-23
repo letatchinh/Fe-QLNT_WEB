@@ -17,12 +17,17 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import api from "../../api";
 import Parameter from "../../components/Brem/Parameter";
+import { KEY_STORED, ROLE } from "../../constant/defaultValue";
 export default function Index() {
   const [form] = Form.useForm();
-  const [loading,setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [profile, setProfile] = useState(null);
+  useEffect(() => {
+    const acc = JSON.parse(localStorage.getItem(KEY_STORED));
+    setProfile(acc);
+  }, [localStorage.getItem(KEY_STORED)]);
 
-  
-  const [loadingLoadPage,setLoadingLoadPage] = useState(false)
+  const [loadingLoadPage, setLoadingLoadPage] = useState(false);
   const [brem, setBrem] = useState([]);
   const [opTionsbrem, setOpTionsBrem] = useState([]);
   const [GroupRoom, setGroupRoom] = useState([]);
@@ -32,24 +37,21 @@ export default function Index() {
   const [AllUser, setAllUser] = useState([]);
   const [listUser, setListUser] = useState([]);
   const [selectBrem, setSelectBrem] = useState(null);
- async function handleDropdownVisibleChange(open) {
-    if(open){
-      const res = await api.room.getListStudent()
-      if(res){
+  async function handleDropdownVisibleChange(open) {
+    if (open) {
+      const res = await api.room.getListStudent();
+      if (res) {
         const options = res.listUser.map((e) => ({
           label: e.name,
           value: e._id,
         }));
         setUser(options);
       }
-     
     }
   }
   const handleChangeGroupRoom = (value) => {
     setGroupSelect(GroupRoom.find((e) => e._id === value));
   };
-
-
 
   const onhandleChange = (value) => {
     const exist = listUser.some((e) => e === value);
@@ -62,22 +64,22 @@ export default function Index() {
     const findBrem = brem.find((e) => e._id === value);
     setSelectBrem(findBrem);
   };
-  const deleteTag = (el,removedTag) => {
+  const deleteTag = (el, removedTag) => {
     el.preventDefault();
-    setListUser((currentValue)=>{
-      let newValue = currentValue.filter((e)=>e!==removedTag)
-      return [...newValue]
-    })
+    setListUser((currentValue) => {
+      let newValue = currentValue.filter((e) => e !== removedTag);
+      return [...newValue];
+    });
   };
   useEffect(() => {
     const fetch = async () => {
-      setLoadingLoadPage(true)
+      setLoadingLoadPage(true);
       Promise.allSettled([
         await api.brem.getAll(),
         await api.room.getListStudent(),
         await api.groupRoom.getAll(),
         await api.user.getAll(),
-      ]).then(([brems, users, groupRoom,allUser]) => {
+      ]).then(([brems, users, groupRoom, allUser]) => {
         if (brems.status === "fulfilled") {
           const options = brems.value.map((e) => ({
             label: e.name,
@@ -94,12 +96,26 @@ export default function Index() {
           setUser(options);
         }
         if (groupRoom.status === "fulfilled") {
-          const options = groupRoom.value.map((e) => ({
-            label: e.name,
-            value: e._id,
-          }));
-          setOpTionsGroupRoom(options);
-          setGroupRoom(groupRoom.value);
+          const acc = JSON.parse(localStorage.getItem(KEY_STORED));
+          if (get(profile, "role") === ROLE.superAdmin) {
+            const options = groupRoom.value.map((e) => {
+              return {
+                label: e.name,
+                value: e._id,
+              };
+            });
+            setOpTionsGroupRoom(options);
+            setGroupRoom(groupRoom.value);
+          } else {
+            const findOne = groupRoom.value.find(
+              (e) => get(e, "idAccount._id") === get(acc, "_id")
+            );
+            const options = [
+              { label: get(findOne, "name"), value: get(findOne, "_id") },
+            ];
+            setOpTionsGroupRoom(options);
+            setGroupRoom(groupRoom.value);
+          }
         }
         if (allUser.status === "fulfilled") {
           const options = allUser?.value?.map((e) => ({
@@ -108,13 +124,13 @@ export default function Index() {
           }));
           setAllUser(options);
         }
-        setLoadingLoadPage(false)
+        setLoadingLoadPage(false);
       });
     };
     fetch();
   }, []);
   const onFinish = async (values) => {
-    setLoading(true)
+    setLoading(true);
     const submitData = {
       ...values,
       date: moment().subtract(1, "M").format("YYYY-MM-DD"),
@@ -125,12 +141,12 @@ export default function Index() {
       toast.success("Tạo phòng thành công");
       form.resetFields();
       setGroupSelect(null);
-      setListUser([])
-      setSelectBrem(null)
+      setListUser([]);
+      setSelectBrem(null);
     } else {
       toast.error(get(res, "message", ""));
     }
-    setLoading(false)
+    setLoading(false);
   };
   return (
     <div>
@@ -152,7 +168,11 @@ export default function Index() {
           label="Khu nhà"
           name="idGroupRoom"
         >
-          <Select loading={loadingLoadPage} onChange={handleChangeGroupRoom} options={opTionsGroupRoom} />
+          <Select
+            loading={loadingLoadPage}
+            onChange={handleChangeGroupRoom}
+            options={opTionsGroupRoom}
+          />
         </Form.Item>
         <Form.Item
           rules={[
@@ -176,9 +196,17 @@ export default function Index() {
           ]}
           label="Tầng"
           name="floor"
-          help={groupSelect ? `Toà nhà này tối đa ${get(groupSelect,'countFloor',6)} tâng` : ''}
+          help={
+            groupSelect
+              ? `Toà nhà này tối đa ${get(groupSelect, "countFloor", 6)} tâng`
+              : ""
+          }
         >
-          <InputNumber  disabled={!groupSelect} min={1} max={get(groupSelect,'countFloor',6)} />
+          <InputNumber
+            disabled={!groupSelect}
+            min={1}
+            max={get(groupSelect, "countFloor", 6)}
+          />
         </Form.Item>
         <Form.Item
           rules={[
@@ -214,19 +242,24 @@ export default function Index() {
           label="Người ở"
           name="people"
         >
-          <Select onDropdownVisibleChange={handleDropdownVisibleChange} loading={loadingLoadPage} onChange={onhandleChange} options={user} />
+          <Select
+            onDropdownVisibleChange={handleDropdownVisibleChange}
+            loading={loadingLoadPage}
+            onChange={onhandleChange}
+            options={user}
+          />
         </Form.Item>
         <Row>
           {listUser?.map((e) => {
             const findOne = AllUser.find((item) => item.value === e);
             return (
               <Tag
-              key={e}
+                key={e}
                 color="blue"
                 closable
-                onClose={(es) => deleteTag(es,findOne.value)}
+                onClose={(es) => deleteTag(es, findOne.value)}
               >
-                {findOne.label || ''}
+                {findOne.label || ""}
               </Tag>
             );
           })}
@@ -241,7 +274,11 @@ export default function Index() {
           label="Chọn brem phòng"
           name="idBrem"
         >
-          <Select loading={loadingLoadPage} onChange={onChangeBrem} options={opTionsbrem} />
+          <Select
+            loading={loadingLoadPage}
+            onChange={onChangeBrem}
+            options={opTionsbrem}
+          />
         </Form.Item>
         {selectBrem && <Parameter brem={selectBrem} />}
         <Row>
@@ -285,7 +322,6 @@ export default function Index() {
           </Button>
         </Row>
       </Form>
-     
     </div>
   );
 }

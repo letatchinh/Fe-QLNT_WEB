@@ -55,6 +55,7 @@ export default function Index() {
   const setRoomForUser = (newRoom) => {
     const newUser = {...userSelect,roomUser: newRoom}
     setUser(user.map(user => user._id === newUser._id ? newUser : user))
+    setUserTemp(user.map(user => user._id === newUser._id ? newUser : user))
   }
   ////////////////////////////////
   const onCancelModalDelete = () => {

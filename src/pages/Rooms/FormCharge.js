@@ -31,8 +31,8 @@ const descriptionItemProps = {
 };
 const span = 12;
 export default function FormCharge({ room, onCancel,setNewRoom }) {
-  console.log(room,"room");
   const { idBrem :brems, _id } = room;
+  const [loading,setLoading] = useState(false)
   const { electricityPrice, rent, trash, waterPrice, wifi } = brems;
   const [meters, setMeter] = useState({ meterNow: null, meterPre: null });
   const [form] = Form.useForm();
@@ -41,7 +41,6 @@ export default function FormCharge({ room, onCancel,setNewRoom }) {
       const [date, month, year] = getDateMonthYearNow();
       const res = await api.meter.getPreAndMonthNow({ idRoom: _id, date });
       if (res) {
-        console.log(res,"res");
         const { meterNow } = res;
         setMeter(res);
         form.setFieldsValue({
@@ -58,6 +57,7 @@ export default function FormCharge({ room, onCancel,setNewRoom }) {
   const waterUse =
     get(meters, "meterNow.water", 0) - get(meters, "meterPre.water", 0);
   const onFinish = async(values) => {
+    setLoading(true)
     const email = get(room,'people',[]).map(e => get(e,'userId.email',''))
     const submitData = {
       // html,
@@ -89,6 +89,7 @@ export default function FormCharge({ room, onCancel,setNewRoom }) {
     console.log(submitData,"submitData");
     const res = await api.bill.create(submitData)
     if(res){
+      console.log(res,"res");
       if(res.status){
         
         toast.success("Thanh toán thành công")
@@ -100,6 +101,7 @@ export default function FormCharge({ room, onCancel,setNewRoom }) {
     else{
       toast.error("Thanh toán thất bại")
     }
+    setLoading(false)
   };
   const handleSave = async () => {
     try {
@@ -176,6 +178,7 @@ export default function FormCharge({ room, onCancel,setNewRoom }) {
           </Button>
           {!room.bill ?<Button
             disabled={!meters.meterNow}
+            loading={loading}
             style={{ margin: "0 auto", width: "200px" }}
             type="primary"
             htmlType="submit"
