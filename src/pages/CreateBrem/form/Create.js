@@ -1,5 +1,5 @@
 import { BgColorsOutlined, DeleteOutlined, DeleteTwoTone, DollarCircleOutlined, EditTwoTone, ThunderboltOutlined, WifiOutlined } from '@ant-design/icons'
-import { Button, Col, Divider, Form, Input, InputNumber, Modal, Row, Table, Typography } from 'antd'
+import { Button, Col, Divider, Form, Input, InputNumber, Modal, Row, Table, Tag, Typography } from 'antd'
 import { get } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -13,6 +13,7 @@ const {Text} = Typography
 export default function Create() {
     const [form] = Form.useForm()
     const [brems,setBrems] = useState([])
+    console.log(brems,"brems");
     const [loading,setLoading] = useState(false)
     const [selectBrem,setSelectBrem] = useState(null)
     const [selectIdDelete,setSelectIdDelete] = useState(null)
@@ -126,6 +127,13 @@ export default function Create() {
           title:'Tiền Wifi',
           key : 'wifi',
           dataIndex : 'wifi',
+      },
+      {
+          title:'Các phòng đang dùng',
+          key : 'rooms',
+          dataIndex : 'rooms',
+          width : 200,
+          render : (item,record) => item?.map(e => <Tag color='lime'>{get(e,'roomNumber')}</Tag>)
       },
       {
           title:'Thao tác',
