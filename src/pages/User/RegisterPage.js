@@ -6,47 +6,29 @@ import api from '../../api';
 import GroupButtonForm from '../../components/GroupButton/Index';
 import { GENDER, GENDER_VI } from '../../constant/defaultValue';
 
-export default function FormUser({onCancel,selectUser}) {
+export default function RegisterPage({}) {
     const [form] = Form.useForm()
     const [loading,setLoading] = useState(false)
     const [hobbys,setHobbys] = useState([])
     const [listHobbys,setListHobbys] = useState([])
     const onFinish = async(values) => {
-        if(!!selectUser){
-            setLoading(true)
-            const res = await api.user.update({...values,_id :selectUser._id,hobbys })
-            if(res){
-                toast.success("Cập nhật người dùng thành công")
-                onCancel()
-                form.resetFields()
-            }
-            setLoading(false)
-        }
-        else{
             setLoading(true)
             const res = await api.user.create({...values,hobbys})
             if(res){
                 toast.success("Tạo người dùng thành công")
-                onCancel()
                 form.resetFields()
             }
             setLoading(false)
-        }
+        
      
     }
     useEffect(() => {
-        form.resetFields()
-        if(selectUser){
-            const {name,CMND,countryside,phone,email,hobbys,gender,MaSv,branch} = selectUser
-            form.setFieldsValue({name,CMND,countryside,phone,email,gender,MaSv,branch})
-            setHobbys(hobbys?.map(e => e._id))
-        }
         const fetchHobby = async() => {
             const res  = await api.hobby.getAll()
             setListHobbys(res.map(e => ({label : get(e,'name'),value : get(e,'_id')})))
         }
         fetchHobby()
-    },[selectUser])
+    },[])
     const onhandleChange = (value) => {
         const exist = hobbys.some(e => e === value)
         if(!exist){
@@ -64,7 +46,7 @@ export default function FormUser({onCancel,selectUser}) {
       };
   return (
     <div>
-        <Divider>{selectUser ? "Cập nhật người dùng" :"Tạo người dùng"}</Divider>
+        <Divider>{"Tạo người dùng"}</Divider>
         <Form
         form={form}
         labelAlign='left'
@@ -202,6 +184,7 @@ export default function FormUser({onCancel,selectUser}) {
           })}
           </Col>
         </Row>
+
         <Divider>Thông tin tài khoản</Divider>
         <Form.Item
         label='Tài khoản'
@@ -227,7 +210,10 @@ export default function FormUser({onCancel,selectUser}) {
         >
             <Input.Password />
         </Form.Item>
-       <GroupButtonForm loading={loading} text={!!selectUser ? "Cập nhật" : "Tạo mới"} onCancel={onCancel}/>
+        <Row>
+       <Button onClick={() => form.resetFields()} style={{margin : '0 auto', width : '200px'}}>Làm mới</Button>
+       <Button loading={loading} style={{margin : '0 auto', width : '200px'}} type='primary' htmlType='submit'>Tạo mới</Button>
+       </Row>
         </Form>
     </div>
   )

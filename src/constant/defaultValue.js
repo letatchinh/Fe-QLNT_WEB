@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://be-qlnt.onrender.com'
+export const BASE_URL = 'http://localhost:8000'
 
 export const PRICE = {
     ELECTRICITY : 15000,
@@ -13,11 +13,13 @@ export const GENDER_VI = {
 }
 export const ROLE = {
     superAdmin : 'superAdmin',
-    staff: 'staff'
+    staff: 'staff',
+    student:'student'
 }
 export const ROLE_VI = {
     superAdmin : 'Administrator',
-    staff: 'Quản lý'
+    staff: 'Quản lý',
+    student:'Sinh viên'
 }
 export const KEY_STORED = "loginKtx"
 export const INFO_VI = {

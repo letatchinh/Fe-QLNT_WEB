@@ -12,6 +12,8 @@ import Login from '../pages/Login/Index';
 import Account from '../pages/Account/Index';
 import GroupRoom from '../pages/GroupRoom/Index';
 import Hobby from '../pages/User/Hobby';
+import RegisterPage from '../pages/User/RegisterPage';
+import FindRoom from '../pages/User/FindRoom';
 
 const adminRoutes = [
   { path: '/', element: <Dashboard/>, title:"Thống kê" },
@@ -60,6 +62,16 @@ const adminRoutes = [
     path: PATH_APP.groupRoom.root,
     element: <GroupRoom/>,
     title:"Quản lí Khu nhà"
+  },
+  {
+    path: PATH_APP.user.register,
+    element: <RegisterPage/>,
+    title:"Đăng ký tài khoản cho sinh viên"
+  },
+  {
+    path: PATH_APP.user.findRoom,
+    element: <FindRoom/>,
+    title:"Tìm phòng cho sinh viên"
   },
 ]
 export { adminRoutes};

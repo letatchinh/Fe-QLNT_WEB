@@ -2,6 +2,7 @@ import {
   BankOutlined,
     DesktopOutlined,
     PieChartOutlined,
+    SkinTwoTone,
     TeamOutlined,
     UserAddOutlined,
     UserOutlined,
@@ -13,45 +14,52 @@ import { useNavigate } from "react-router-dom";
 import { PATH_APP } from "../routes/path";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { KEY_STORED } from "../constant/defaultValue";
+import { KEY_STORED, ROLE } from "../constant/defaultValue";
 import HeaderMain from "./HeaderMain";
+import { get } from "lodash";
 
   const { Header, Content, Footer, Sider } = Layout;
-  function getItem(label, key, icon, children) {
-    return {
-      key,
-      icon,
-      children,
-      label,
-    };
-  }
-  const itemsNavbar = [
-    getItem("Thống kê", PATH_APP.main.dashboard, <PieChartOutlined />),
-    getItem("Danh sách Khu nhà", PATH_APP.groupRoom.root, <BankOutlined />),
-    getItem("Danh sách phòng trọ", PATH_APP.rooms.root, <DesktopOutlined />),
-    getItem("Quản lý tài khoản", PATH_APP.account.root, <TeamOutlined />),
-    getItem("Quản lí sinh viên", "sub2", <UserAddOutlined />,[
-      getItem("Danh sách sinh viên", PATH_APP.user.root),
-      getItem("Danh sách sở thích", PATH_APP.user.hobby),
-    ]),
-    getItem("Quản lí phòng trọ", "sub1", <UserOutlined />, [
-      getItem("Thêm phòng trọ", PATH_APP.rooms.create),
-      getItem("Tạo brem phòng", PATH_APP.brem.create),
-      // getItem("Tính tiền phòng", PATH_APP.rooms.charge),
-      // getItem("Sửa đổi phòng", PATH_APP.rooms.update),
-    ]),
-  ];
+ 
+ 
 export default function LayoutMain({children,title}) {
-
+  const [account,setAccount]= useState(null)
     const navigate = useNavigate();
     useEffect(() => {
-      const account = localStorage.getItem(KEY_STORED)
+      const account = JSON.parse(localStorage.getItem(KEY_STORED))
+      setAccount(account)
     },[localStorage.getItem(KEY_STORED)])
   const [collapsed, setCollapsed] = useState(false);
 
   const handleMenuClick = (e) => {
     navigate(e.key,{replace : true});
   };
+  function getItem(label, key, icon, children,role = []) {
+    return {
+      key,
+      icon,
+      children,
+      label,
+      disabled : get(account,'role','') === ROLE.superAdmin ? false : !account || !role.includes(get(account,'role')),
+    };
+  }
+  const itemsNavbar = [
+    getItem("Thống kê", PATH_APP.main.dashboard, <PieChartOutlined />),
+    getItem("Danh sách Khu nhà", PATH_APP.groupRoom.root, <BankOutlined />),
+    getItem("Danh sách phòng trọ", PATH_APP.rooms.root, <DesktopOutlined />,null,[ROLE.staff]),
+    getItem("Quản lý tài khoản", PATH_APP.account.root, <TeamOutlined />),
+    getItem("Quản lí sinh viên", "sub2", <UserAddOutlined />,[
+      getItem("Danh sách sinh viên", PATH_APP.user.root,null,null,[ROLE.staff]),
+      getItem("Danh sách sở thích", PATH_APP.user.hobby,null,null,[ROLE.staff]),
+    ],[ROLE.staff]),
+    getItem("Quản lí phòng trọ", "sub1", <UserOutlined />, [
+      getItem("Thêm phòng trọ", PATH_APP.rooms.create,null,null,[ROLE.staff]),
+      getItem("Tạo brem phòng", PATH_APP.brem.create,null,null,[ROLE.staff]),
+    ],[ROLE.staff]),
+    getItem("Dành cho sinh viên", "sub3", <SkinTwoTone />, [
+      getItem("Đăng ký tài khoản", PATH_APP.user.register,null,null,[ROLE.student]),
+      getItem("Tìm phòng", PATH_APP.user.findRoom,null,null,[ROLE.student]),
+    ],[ROLE.student]),
+  ];
   return (
     <Layout
     style={{

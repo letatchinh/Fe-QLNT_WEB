@@ -24,6 +24,9 @@ export const PATH_APP = {
     user: {
       root:path(ROOTS.app,'/user'),
       hobby:path(ROOTS.app,'/hobby'),
+      register:path(ROOTS.app,'/register'),
+      findRoom:path(ROOTS.app,'/findRoom'),
+      
     },
     account:{
       root:path(ROOTS.app,'/account'),

@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import api from "../../api";
 import Parameter from "../../components/Brem/Parameter";
 import { KEY_STORED, ROLE } from "../../constant/defaultValue";
+import LoadingPage from '../../components/comom/LoadingPage'
 export default function Index() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -96,14 +97,16 @@ export default function Index() {
           setUser(options);
         }
         if (groupRoom.status === "fulfilled") {
+          
           const acc = JSON.parse(localStorage.getItem(KEY_STORED));
-          if (get(profile, "role") === ROLE.superAdmin) {
+          if (get(acc, "role") === ROLE.superAdmin) {
             const options = groupRoom.value.map((e) => {
               return {
                 label: e.name,
                 value: e._id,
               };
             });
+            console.log(groupRoom);
             setOpTionsGroupRoom(options);
             setGroupRoom(groupRoom.value);
           } else {
@@ -150,6 +153,7 @@ export default function Index() {
   };
   return (
     <div>
+    <LoadingPage loading={loadingLoadPage}/>
       <Divider>Tạo phòng</Divider>
       <Form
         form={form}
