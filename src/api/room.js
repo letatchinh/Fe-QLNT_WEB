@@ -9,4 +9,5 @@ export const room = {
     getListStudent : () => requester.get(`/room/getListStudent`),
     findRoomForStudent : (data) => requester.post(`/room/findRoomForStudent`,data),
     addOneUserToRoom : (data) => requester.put(`/room/addOneUserToRoom/${data.idRoom}`,data),
+    getRoomForUser : (id) => requester.get(`/room/getRoomForUser/${id}`),
 }

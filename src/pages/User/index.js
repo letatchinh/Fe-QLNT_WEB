@@ -24,6 +24,7 @@ export default function Index() {
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
   const [select, setSelect] = useState(null);
   const [user, setUser] = useState([]);
+  console.log(user,"user");
   const [userTemp, setUserTemp] = useState([]);
   const [loading, setLoading] = useState(false);
   const onCancel = () => {

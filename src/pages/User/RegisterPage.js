@@ -11,13 +11,22 @@ export default function RegisterPage({}) {
     const [loading,setLoading] = useState(false)
     const [hobbys,setHobbys] = useState([])
     const [listHobbys,setListHobbys] = useState([])
+    const [loadingPage,setLoadingLoadPage] = useState(false)
+    const [opTionsGroupRoom, setOpTionsGroupRoom] = useState([]);
+    // const handleChangeGroupRoom = (value) => {
+    //   setGroupSelect(GroupRoom.find((e) => e._id === value));
+    // };
     const onFinish = async(values) => {
             setLoading(true)
             const res = await api.user.create({...values,hobbys})
-            if(res){
+            if(res.status){
                 toast.success("Tạo người dùng thành công")
                 form.resetFields()
             }
+            else{
+              toast.error(get(res,'message',''))
+            }
+
             setLoading(false)
         
      
@@ -27,7 +36,14 @@ export default function RegisterPage({}) {
             const res  = await api.hobby.getAll()
             setListHobbys(res.map(e => ({label : get(e,'name'),value : get(e,'_id')})))
         }
+        const fetchGroupRoom = async() => {
+          setLoadingLoadPage(true);
+            const res  =  await api.groupRoom.getAll()
+            setOpTionsGroupRoom(res.map(e => ({label : get(e,'name'),value : get(e,'_id')})))
+            setLoadingLoadPage(false);
+        }
         fetchHobby()
+        fetchGroupRoom()
     },[])
     const onhandleChange = (value) => {
         const exist = hobbys.some(e => e === value)
@@ -65,6 +81,21 @@ export default function RegisterPage({}) {
         >
             <Input />
         </Form.Item>
+        <Form.Item
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng điền !",
+            },
+          ]}
+          label="Khu nhà"
+          name="idGroupRoom"
+        >
+          <Select
+            loading={loadingPage}
+            options={opTionsGroupRoom}
+          />
+          </Form.Item>
         <Form.Item
         label='Giới tính'
         name='gender'

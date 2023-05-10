@@ -10,6 +10,9 @@ export default function FormUser({onCancel,selectUser}) {
     const [form] = Form.useForm()
     const [loading,setLoading] = useState(false)
     const [hobbys,setHobbys] = useState([])
+    const [loadingPage,setLoadingLoadPage] = useState(false)
+    const [opTionsGroupRoom, setOpTionsGroupRoom] = useState([]);
+
     const [listHobbys,setListHobbys] = useState([])
     const onFinish = async(values) => {
         if(!!selectUser){
@@ -45,6 +48,13 @@ export default function FormUser({onCancel,selectUser}) {
             const res  = await api.hobby.getAll()
             setListHobbys(res.map(e => ({label : get(e,'name'),value : get(e,'_id')})))
         }
+        const fetchGroupRoom = async() => {
+          setLoadingLoadPage(true);
+            const res  =  await api.groupRoom.getAll()
+            setOpTionsGroupRoom(res.map(e => ({label : get(e,'name'),value : get(e,'_id')})))
+            setLoadingLoadPage(false);
+        }
+        fetchGroupRoom()
         fetchHobby()
     },[selectUser])
     const onhandleChange = (value) => {
@@ -83,6 +93,21 @@ export default function FormUser({onCancel,selectUser}) {
         >
             <Input />
         </Form.Item>
+        <Form.Item
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng điền !",
+            },
+          ]}
+          label="Khu nhà"
+          name="idGroupRoom"
+        >
+          <Select
+            loading={loadingPage}
+            options={opTionsGroupRoom}
+          />
+          </Form.Item>
         <Form.Item
         label='Giới tính'
         name='gender'
