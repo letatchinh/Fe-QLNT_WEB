@@ -32,3 +32,13 @@ export const INFO = {
     branch : 'branch',
     hobbys:'hobbys'
 }
+export const STATUS_REQUEST = {
+    NEW : 'NEW',
+    CONFIRM : 'CONFIRM',
+    DENY:'DENY'
+}
+export const STATUS_REQUEST_VI = {
+    NEW : 'Mới',
+    CONFIRM : 'Đã xác nhận',
+    DENY:'Đã từ chối'
+}

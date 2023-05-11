@@ -40,8 +40,8 @@ export default function FormUser({onCancel,selectUser}) {
     useEffect(() => {
         form.resetFields()
         if(selectUser){
-            const {name,CMND,countryside,phone,email,hobbys,gender,MaSv,branch} = selectUser
-            form.setFieldsValue({name,CMND,countryside,phone,email,gender,MaSv,branch})
+            const {name,CMND,countryside,phone,email,hobbys,gender,MaSv,branch,username,password,idGroupRoom} = selectUser
+            form.setFieldsValue({name,CMND,countryside,phone,email,gender,MaSv,branch,username,password,idGroupRoom})
             setHobbys(hobbys?.map(e => e._id))
         }
         const fetchHobby = async() => {

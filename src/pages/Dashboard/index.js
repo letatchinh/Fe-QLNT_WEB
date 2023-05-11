@@ -1,4 +1,4 @@
-import { Card, Col, DatePicker, Divider, Row, Select, Statistic, Typography } from 'antd';
+import { Card, Col, DatePicker, Divider, Row, Select, Statistic, Table, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import api from '../../api';
 import { formatDate, getMonthNow } from '../../utils';
@@ -6,10 +6,12 @@ import CountUp from 'react-countup';
 import { get } from 'lodash';
 import moment from "moment";
 import { KEY_STORED } from '../../constant/defaultValue';
+import RequestJoinRoom from './RequestJoinRoom';
 
 export default function Index() {
   const [date,setDate] = useState(getMonthNow())
   const [data,setData] = useState(null)
+  
   const [profile,setProfile] = useState(null)
   useEffect(() => {
     const acc = JSON.parse(localStorage.getItem(KEY_STORED))
@@ -44,6 +46,8 @@ export default function Index() {
     }
    profile && fetch()
   },[profile])
+
+ 
   return (
     <div>
     <Divider>{get(data,'groupRooms') ?  `Khu nhà ${get(data,'groupRooms.name','')}` : 'Tất cả phòng'}</Divider>
@@ -97,6 +101,8 @@ export default function Index() {
   </Row>
      </Col>
   </Row>
+  <Divider>Yêu cầu vào phòng</Divider>
+  <RequestJoinRoom />
     </div>
   )
 }

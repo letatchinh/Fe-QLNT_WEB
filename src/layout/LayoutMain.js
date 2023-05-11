@@ -39,7 +39,7 @@ export default function LayoutMain({children,title}) {
       icon,
       children,
       label,
-      disabled : get(account,'role','') === ROLE.superAdmin ? false : !account || !role.includes(get(account,'role')),
+      disabled : role[0] === 1 ? false : get(account,'role','') === ROLE.superAdmin ? false : !account || !role.includes(get(account,'role')),
     };
   }
   const itemsNavbar = [
@@ -56,9 +56,9 @@ export default function LayoutMain({children,title}) {
       getItem("Tạo brem phòng", PATH_APP.brem.create,null,null,[ROLE.staff]),
     ],[ROLE.staff]),
     getItem("Dành cho sinh viên", "sub3", <SkinTwoTone />, [
-      getItem("Đăng ký tài khoản", PATH_APP.user.register,null,null,[ROLE.student]),
+      getItem("Đăng ký tài khoản", PATH_APP.user.register,null,null,[1]),
       getItem("Tìm phòng", PATH_APP.user.findRoom,null,null,[ROLE.student]),
-    ],[ROLE.student]),
+    ],[1]),
   ];
   return (
     <Layout
@@ -80,7 +80,7 @@ export default function LayoutMain({children,title}) {
         }}
       />
       <Menu
-      disabled={!localStorage.getItem(KEY_STORED)}
+      // disabled={!localStorage.getItem(KEY_STORED)}
         onClick={handleMenuClick}
         theme="dark"
         defaultSelectedKeys={[PATH_APP.main.dashboard]}

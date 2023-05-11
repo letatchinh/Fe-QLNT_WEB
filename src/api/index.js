@@ -7,6 +7,7 @@ import { hobby } from "./hobby";
 import { account } from "./account";
 import { groupRoom } from "./groupRoom";
 import { nodeMailer } from "./nodeMailer";
+import { requestJoinRoom } from "./requestJoinRoom";
 
 const api = {
     brem,
@@ -18,6 +19,7 @@ const api = {
     nodeMailer,
     account,
     groupRoom,
+    requestJoinRoom,
 };
 
 export default api;

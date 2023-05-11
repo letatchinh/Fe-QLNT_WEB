@@ -75,16 +75,19 @@ export default function FormCharge({ room, onCancel,setNewRoom }) {
         waterPrice * waterUse +
         trash +
         wifi +
-        rent} VNĐ</h1>
+        rent / get(room,'maxUser',1) * get(room,'people',[]).length} VNĐ</h1>
        <p> Số điện cũ ${get(meters, "meterPre.electricity", 0)}: > Số điện mới : ${get(meters, "meterNow.electricity", 0)}</p>
        <p> Số nước cũ ${get(meters, "meterPre.water", 0)}: > Số nước mới : ${get(meters, "meterNow.water", 0)}</p>
+       <p> Giá phòng ${get(room,'maxUser',1)} người : ${rent}  </p>
+       <p> Số người ở : ${get(room,'people',[]).length}  </p>
+       <p> Giá tiền phòng mỗi người ${rent / get(room,'maxUser',1)}  </p>
        <Typography.Text type='success'>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi ,từ Chủ trọ</Typography.Text>
         </div>`,
       totalPrice :  electricityUse * electricityPrice +
       waterPrice * waterUse +
       trash +
       wifi +
-      rent
+      rent / get(room,'maxUser',1) * get(room,'people',[]).length
     };
     console.log(submitData,"submitData");
     const res = await api.bill.create(submitData)
