@@ -1,5 +1,5 @@
-import { Button, Checkbox, Form, Input, Row } from 'antd';
-import { KEY_STORED } from '../../constant/defaultValue';
+import { Button, Checkbox, Col, Form, Input, Row } from 'antd';
+import { KEY_STORED, ROLE } from '../../constant/defaultValue';
 import api from '../../api'
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +15,12 @@ const Index = () => {
       if(res.status){
         toast.success("Đăng nhập thành công")
         localStorage.setItem(KEY_STORED,JSON.stringify(get(res,'accountOne',{})))
-        navigate("/")
+        if(get(res,'accountOne.role') === ROLE.student){
+          navigate("/findRoom")
+        }
+        else{
+          navigate("/")
+        }
       }
       else{
         toast.error("Đăng nhập Thất bại")
@@ -36,7 +41,8 @@ const Index = () => {
       span: 16,
     }}
     style={{
-      maxWidth: 600,
+      maxWidth: 1000,
+      width : 400
     }}
     initialValues={{
       remember: true,
@@ -88,9 +94,18 @@ const Index = () => {
         span: 16,
       }}
     >
-      <Button loading={loading} type="primary" htmlType="submit">
+      <Row>
+     <Col span={10}>
+     <Button onClick={() =>navigate("/register")}>
+        Đăng ký
+      </Button>
+     </Col>
+    <Col span={10}>
+    <Button loading={loading} type="primary" htmlType="submit">
         Đăng nhập
       </Button>
+    </Col>
+      </Row>
     </Form.Item>
   </Form>
   </Row>

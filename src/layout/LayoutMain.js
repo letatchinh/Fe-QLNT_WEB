@@ -26,7 +26,12 @@ export default function LayoutMain({children,title}) {
     const navigate = useNavigate();
     useEffect(() => {
       const account = JSON.parse(localStorage.getItem(KEY_STORED))
-      setAccount(account)
+      if(account){
+        setAccount(account)
+      }
+      else{
+        navigate("/login")
+      }
     },[localStorage.getItem(KEY_STORED)])
   const [collapsed, setCollapsed] = useState(false);
 
@@ -55,6 +60,9 @@ export default function LayoutMain({children,title}) {
       getItem("Thêm phòng trọ", PATH_APP.rooms.create,null,null,[ROLE.staff]),
       getItem("Tạo brem phòng", PATH_APP.brem.create,null,null,[ROLE.staff]),
     ],[ROLE.staff]),
+``
+  ];
+  const itemsNavbarStudent = [
     getItem("Dành cho sinh viên", "sub3", <SkinTwoTone />, [
       getItem("Đăng ký tài khoản", PATH_APP.user.register,null,null,[1]),
       getItem("Tìm phòng", PATH_APP.user.findRoom,null,null,[ROLE.student]),
@@ -80,12 +88,12 @@ export default function LayoutMain({children,title}) {
         }}
       />
       <Menu
-      // disabled={!localStorage.getItem(KEY_STORED)}
+      disabled={!localStorage.getItem(KEY_STORED)}
         onClick={handleMenuClick}
         theme="dark"
         defaultSelectedKeys={[PATH_APP.main.dashboard]}
         mode="inline"
-        items={itemsNavbar}
+        items={account && account?.role !== ROLE.student ? itemsNavbar : itemsNavbarStudent}
       />
     </Sider>
     <Layout className="site-layout">
