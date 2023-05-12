@@ -5,7 +5,7 @@ import { formatDate, getMonthNow } from '../../utils';
 import CountUp from 'react-countup';
 import { get } from 'lodash';
 import moment from "moment";
-import { KEY_STORED } from '../../constant/defaultValue';
+import { KEY_STORED, ROLE } from '../../constant/defaultValue';
 import RequestJoinRoom from './RequestJoinRoom';
 
 export default function Index() {
@@ -13,6 +13,7 @@ export default function Index() {
   const [data,setData] = useState(null)
   
   const [profile,setProfile] = useState(null)
+  console.log(profile,"profile");
   useEffect(() => {
     const acc = JSON.parse(localStorage.getItem(KEY_STORED))
     setProfile(acc)
@@ -101,8 +102,10 @@ export default function Index() {
   </Row>
      </Col>
   </Row>
-  <Divider>Yêu cầu vào phòng</Divider>
+  {get(profile,'role') === ROLE.superAdmin && <>
+    <Divider>Yêu cầu vào phòng</Divider>
   <RequestJoinRoom />
+  </>}
     </div>
   )
 }

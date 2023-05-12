@@ -1,4 +1,4 @@
-import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons'
+import { DeleteTwoTone, EditTwoTone, VerticalAlignBottomOutlined } from '@ant-design/icons'
 import { Button, Col, Input, Modal, Row, Table, Tag, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -7,12 +7,15 @@ import SkeletonTable from '../../components/comom/SkeletonTable'
 import {compact, get} from 'lodash'
 import { KEY_STORED, ROLE, ROLE_VI } from '../../constant/defaultValue'
 import FormGroupRoom from './FormGroupRoom'
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 export default function Index() {
     const [visible,setVisible] = useState(false)
     const [optionsStaff,setOptionsStaff] = useState([])
     const [profile,setProfile] = useState(null)
     const [select,setSelect] = useState(null)
     const [loading,setLoading] = useState(false)
+    const [loadingExport,setLoadingExport] = useState(false)
     const [submitLoading,setSubmitLoading] = useState(false)
     const [groupRooms,setGroups] = useState([])
     const onCancel = () => {
@@ -22,6 +25,42 @@ export default function Index() {
     const handleOpen = (groupRoom) => {
         setVisible(true)
         groupRoom && setSelect(groupRoom)
+    }
+    const handleExportExcel = async(record) => {
+        setLoadingExport(true)
+        const res = await api.groupRoom.getUserByGroupRoom(record?._id)
+        if(res){
+            if(get(res,'listRoom')){
+                let listUser = []
+                const newArr = get(res,'listRoom')?.map(e => {
+                    const NewlistUser = get(e,'people',[]).map(user => ({...user?.userId,roomNumber : get(e,'roomNumber')}))
+                    listUser = [...listUser,...NewlistUser]
+                })
+                const listUserExport = listUser.map(e => {
+                    const submitData = {
+                      'Tên' : get(e,'name'),
+                      'Mã sinh viên' :  get(e,'MaSv'),
+                      'Ngành' :  get(e,'branch'),
+                      'CMND' :  get(e,'CMND'),
+                      'email' :  get(e,'email'),
+                      'Số điện thoại' :  get(e,'phone'),
+                      'Quê quán' :  get(e,'countryside'),
+                    }
+                    return {...submitData}
+                  })
+                  const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+                  const fileExtension = '.xlsx';
+                  setLoadingExport(false)
+                  const exportToCSV = () => {
+                      const ws = XLSX.utils.json_to_sheet(listUserExport);
+                      const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
+                      const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+                      const data = new Blob([excelBuffer], {type: fileType});
+                      FileSaver.saveAs(data, `Danh sách sin Khu nhà ${get(record,'name','')}` + fileExtension);
+                  }
+                  exportToCSV()
+            }
+        }
     }
     const setNewGroup = (newGroup) => setGroups([...groupRooms,newGroup])
     const setNewGroupRoomUpdate = (newGroup) => setGroups(groupRooms.map(e => {
@@ -88,7 +127,8 @@ export default function Index() {
             dataIndex : 'action',
             render:(item,record,index) => <div>
                 <Button onClick={() => handleOpen(record)}><EditTwoTone /></Button>
-                <Button ><DeleteTwoTone /></Button>
+                {/* <Button ><DeleteTwoTone /></Button> */}
+                <Button loading={loadingExport} onClick={() => handleExportExcel(record)} ><VerticalAlignBottomOutlined /></Button>
             </div>
         },
     ]
