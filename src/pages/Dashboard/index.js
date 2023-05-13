@@ -96,7 +96,8 @@ export default function Index() {
       <Card><Statistic loading={loading} title="Tổng số phòng quản lí" value={get(data,'totalRooms')} precision={2} formatter={formatter} /></Card>
     </Col>
     <Col span={4}>
-      <Card><Statistic loading={loading} title="Tổng số sinh viên quản lí" value={get(data,'totalUser')} precision={2} formatter={formatter} /></Card>
+      <Card><Statistic loading={loading} title="Tổng số sinh viên quản lí" value={get(data,'totalUser')} precision={2} formatter={formatter} />
+      </Card>
     </Col>
   </Row>
      </Col>
