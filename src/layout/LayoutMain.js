@@ -48,7 +48,7 @@ export default function LayoutMain({children,title}) {
     };
   }
   const itemsNavbar = [
-    getItem("Thống kê", PATH_APP.main.dashboard, <PieChartOutlined />),
+    getItem("Thống kê", PATH_APP.main.dashboard, <PieChartOutlined />,null,[ROLE.staff]),
     getItem("Danh sách Khu nhà", PATH_APP.groupRoom.root, <BankOutlined />),
     getItem("Danh sách phòng trọ", PATH_APP.rooms.root, <DesktopOutlined />,null,[ROLE.staff]),
     getItem("Quản lý tài khoản", PATH_APP.account.root, <TeamOutlined />),

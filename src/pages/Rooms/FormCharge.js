@@ -239,7 +239,7 @@ export default function FormCharge({ room, onCancel,setNewRoom }) {
                     </div>
                   }
                 >
-                  {trash}
+                  {formatNumberThreeComma(trash)}
                 </Descriptions.Item>
                 <Descriptions.Item
                   {...descriptionItemProps}
@@ -254,7 +254,7 @@ export default function FormCharge({ room, onCancel,setNewRoom }) {
                     </div>
                   }
                 >
-                  {rent}
+                  {formatNumberThreeComma(rent / get(room,'maxUser',1) * get(room,'people',[]).length)}
                 </Descriptions.Item>
                 <Descriptions.Item
                   {...descriptionItemProps}
@@ -269,7 +269,7 @@ export default function FormCharge({ room, onCancel,setNewRoom }) {
                     </div>
                   }
                 >
-                  {wifi}
+                  {formatNumberThreeComma(wifi)}
                 </Descriptions.Item>
 
                 <Descriptions.Item
@@ -291,7 +291,7 @@ export default function FormCharge({ room, onCancel,setNewRoom }) {
                         waterPrice * waterUse +
                         trash +
                         wifi +
-                        rent
+                        rent / get(room,'maxUser',1) * get(room,'people',[]).length
                     )}
                   </Typography.Title>
                 </Descriptions.Item>
