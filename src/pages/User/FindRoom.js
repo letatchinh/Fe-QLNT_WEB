@@ -30,9 +30,11 @@ export default function FindRoom() {
       const account = JSON.parse(localStorage.getItem(KEY_STORED))
       const res = await api.room.getRoomForUser(get(account,'username'))
       const hobby = await api.hobby.getAll()
-      const requestJoin = await api.requestJoinRoom.getAll()
+      const requestJoin = await api.requestJoinRoom.getAll({role : ROLE.superAdmin})
+      console.log(res,"res");
+      console.log(requestJoin,"requestJoin");
       setHobbys(hobby)
-      setDataSource(res?.map(e => ({...e,requestJoin : requestJoin?.find(request => get(request,'idRoom') === e._id)})))
+      setDataSource(res?.map(e => ({...e,requestJoin : requestJoin?.find(request => get(request,'idRoom._id') === e._id)})))
       setLoading(false)
     }
     fetch()
