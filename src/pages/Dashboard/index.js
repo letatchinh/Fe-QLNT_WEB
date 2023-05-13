@@ -13,7 +13,6 @@ export default function Index() {
   const [data,setData] = useState(null)
   
   const [profile,setProfile] = useState(null)
-  console.log(profile,"profile");
   useEffect(() => {
     const acc = JSON.parse(localStorage.getItem(KEY_STORED))
     setProfile(acc)
@@ -102,7 +101,7 @@ export default function Index() {
   </Row>
      </Col>
   </Row>
-  {get(profile,'role') === ROLE.superAdmin && <>
+  {get(profile,'role') !== ROLE.student && <>
     <Divider>Yêu cầu vào phòng</Divider>
   <RequestJoinRoom />
   </>}

@@ -4,17 +4,18 @@ import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import api from '../../api'
 import SkeletonTable from '../../components/comom/SkeletonTable'
-import { STATUS_REQUEST, STATUS_REQUEST_VI } from '../../constant/defaultValue'
+import { KEY_STORED, STATUS_REQUEST, STATUS_REQUEST_VI } from '../../constant/defaultValue'
 import {toast} from 'react-toastify'
 import './index.css'
-export default function RequestJoinRoom() {
+export default function RequestJoinRoom({}) {
     const [requests,setRequests] = useState([])
     const [loading,setLoading] = useState(false)
     const [loadingSubmit,setLoadingSubmit] = useState(false)
     useEffect(() => {
         const fetch = async() => {
+          const acc = JSON.parse(localStorage.getItem(KEY_STORED))
             setLoading(true)
-            const res = await api.requestJoinRoom.getAll()
+            const res = await api.requestJoinRoom.getAll({id : get(acc,'_id') , role :  get(acc,'role')})
             setRequests(res)
             setLoading(false)
         }
